@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">SoniMeals</string>
+    <string name="home">Home</string>
+    <string name="myProfile">Profile</string>
+    <string name="favRes">Favourites</string>
+    <string name="faqs">FAQ</string>
+    <string name="logout">Logout</string>
+    <string name="todo">TODO</string>
+
+    <!--    for hamburger-->
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="restaurant_name">Restaurant Name</string>
+    <string name="_300_person">300/person</string>
+    <string name="_4_7">4.7</string>
+    <string name="no_favorites">You do not have any favorite restaurants</string>
+    <string name="soni_meals">Soni Meals</string>
+    <string name="mobile_number_10_digits">Mobile Number (10 digits)</string>
+    <string name="password">Password</string>
+    <string name="log_in">Login</string>
+    <string name="forgot_password">forgot password?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="enter_your_registered_mobile_number_and_email_below">Enter your registered mobile and email below</string>
+    <string name="next">Next</string>
+    <string name="name_min_3_charracters">Name (Min 3 Charracters)</string>
+    <string name="email_adress">Email Adress</string>
+    <string name="delivery_adrress">Delhivery address</string>
+    <string name="passwrd">New Password</string>
+    <string name="confirm_passwrd">Confirm Password</string>
+    <string name="register">Register</string>
+    <string name="name">Name</string>
+    <string name="mobile">Mobile</string>
+    <string name="email">Email</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="question">Question?</string>
+    <string name="answer">Answer</string>
+
+    <!--   Questions-->
+    <string name="q1">Q.1 How do I make a booking?</string>
+    <string name="q2">Q.2 How can I be certain my booking\'s been received?</string>
+    <string name="q3">Q.3 What happens if I don\'t reconfirm my booking?</string>
+    <string name="q4">Q.4 What happens if I\'m running late?</string>
+    <string name="q5">Q.5 "How do I cancel a booking?</string>
+    <string name="q6">Q.6 Why do you need my email address?</string>
+
+    <!--   Answers-->
+    <string name="faq_answer_one">A.1 It\'s a piece of cake - once you\'ve found your preferred restaurant simply select your time
+        and date and then so long as we have an email address and phone number your booking is instantly confirmed
+        the minute you hit "Book Now".
+    </string>
+    <string name="faq_answer_two">A.2 We\'ll send an instant confirmation email to the address used in your booking.
+        If you book more than a day ahead, we\'ll also send a reminder 24 hours before your booking is due.
+        You can reconfirm your booking using a link in your reminder email.
+    </string>
+    <string name="faq_answer_four">A.4 Call the restaurant. Every restaurant is different,
+        but most will hold a booking for at least twenty minutes before reassigning your table.
+    </string>
+    <string name="faq_answer_three">A.3 Don\'t worry, your restaurant will still hold your booking without a reconfirmation.</string>
+
+    <string name="faq_answer_five">A.5 To help our restaurants manage their sittings we ask our diners to give at least 24 hours notice of any cancellations. You can do this by calling your restaurant direct.If you need to cancel less than 24 hours before your dinner date you can use the cancellation link within your reminder email. We also encourage our diners to follow this up with a call direct to the restaurant.To amend a booking please call the restaurant direct, again endeavouring to give at least 24 hours notice.
+    </string>
+    <string name="faq_answer_six">A.6 All Restaurant Hub bookings are automatically confirmed via email.
+        Without an address to send the confirmation to the booking can\'t be accepted.
+        We\'ll also use your email address to send reminders for any bookings made more than 24 hours in advance of your dining date.
+    </string>
+    <string name="order_history">Order History</string>
+</resources>

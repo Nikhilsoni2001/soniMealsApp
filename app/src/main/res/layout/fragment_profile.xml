@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".fragment.ProfileFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imgDefaultProfile"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/profile" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgDefaultProfile"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/name" />
+
+        <TextView
+            android:id="@+id/tvMobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvName"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/mobile" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvMobile"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/email" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvEmail"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/delivery_address" />
+
+    </RelativeLayout>
+</FrameLayout>
