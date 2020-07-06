@@ -1,5 +1,6 @@
 package com.nikhil.sonimeals.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +10,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
@@ -21,7 +21,7 @@ class HomeActivity : AppCompatActivity() {
     lateinit var drawerLayout: DrawerLayout
     lateinit var coordinatorLayout: CoordinatorLayout
     lateinit var toolbar: Toolbar
-    lateinit var frameLayout: FrameLayout
+    lateinit var frame: FrameLayout
     lateinit var navigationView: NavigationView
 
     var previousItem: MenuItem? = null
@@ -77,7 +77,9 @@ class HomeActivity : AppCompatActivity() {
                     builder.setTitle("Confirmation")
                         .setMessage("Are you sure you want exit?")
                         .setPositiveButton("Yes") { _, _ ->
-                            ActivityCompat.finishAffinity(this)
+//                            ActivityCompat.finishAffinity(this)
+                            val intent = Intent(this, LoginActivity::class.java)
+                            startActivity(intent)
                         }
                         .setNegativeButton("No") { _, _ ->
                             displayHome()
@@ -159,6 +161,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val frag = supportFragmentManager.findFragmentById(R.id.frame)
+        navigationView.checkedItem?.isChecked = false
 
         when (frag) {
             !is HomeFragment -> displayHome()
@@ -171,7 +174,7 @@ class HomeActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerLayout)
         coordinatorLayout = findViewById(R.id.coordinatorLayout)
         toolbar = findViewById(R.id.toolbar)
-        frameLayout = findViewById(R.id.frame)
+        frame = findViewById(R.id.frame)
         navigationView = findViewById(R.id.navigationView)
     }
 

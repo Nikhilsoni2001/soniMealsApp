@@ -3,4 +3,6 @@
     <color name="colorPrimary">#ff555d</color>
     <color name="colorPrimaryDark">#a31545</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="removeFav">#d50000</color>
+    <color name="addFav">#283593</color>
 </resources>

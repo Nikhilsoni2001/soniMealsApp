@@ -1,6 +1,7 @@
 package com.nikhil.sonimeals.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.nikhil.sonimeals.R
+import com.nikhil.sonimeals.activity.RestaurantActivity
 import com.nikhil.sonimeals.database.RestaurantDatabase
 import com.nikhil.sonimeals.database.RestaurantEntity
 import com.nikhil.sonimeals.model.Restaurants
@@ -33,13 +35,8 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
         return restaurants.size
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
-
-
     override fun onBindViewHolder(p0: AllRestaurantsViewHolder, p1: Int) {
-        val resObject = restaurants.get(p1)
+        val resObject = restaurants[p1]
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             p0.resThumbnail.clipToOutline = true
         }
@@ -49,6 +46,11 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
         p0.cost.text = costForTwo
         Picasso.get().load(resObject.imageUrl).error(R.drawable.res_image).into(p0.resThumbnail)
 
+        p0.cardRestaurant.setOnClickListener {
+           val intent = Intent(context, RestaurantActivity::class.java)
+            intent.putExtra("restaurant_id", resObject.id)
+            context.startActivity(intent)
+        }
 
         val listOfFavourites = GetAllFavAsyncTask(context).execute().get()
 
@@ -84,10 +86,6 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
             }
         }
 
-        p0.cardRestaurant.setOnClickListener {
-            Toast.makeText(context, "Clicked on: ${p0.restaurantName.text}", Toast.LENGTH_SHORT)
-                .show()
-        }
     }
 
     class AllRestaurantsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -150,7 +148,7 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
     ) :
         AsyncTask<Void, Void, List<String>>() {
 
-        val db = Room.databaseBuilder(context, RestaurantDatabase::class.java, "res-db").build()
+        val db = Room.databaseBuilder(context, RestaurantDatabase::class.java, "res-db").fallbackToDestructiveMigration().build()
         override fun doInBackground(vararg params: Void?): List<String> {
 
             val list = db.restaurantDao().getAllRestaurants()

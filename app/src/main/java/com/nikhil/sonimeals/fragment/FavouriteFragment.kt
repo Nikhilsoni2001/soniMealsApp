@@ -85,7 +85,7 @@ class FavouriteFragment : Fragment() {
     /*A new async class for fetching the data from the DB*/
     class FavouritesAsync(context: Context) : AsyncTask<Void, Void, List<RestaurantEntity>>() {
 
-        val db = Room.databaseBuilder(context, RestaurantDatabase::class.java, "res-db").build()
+        val db = Room.databaseBuilder(context, RestaurantDatabase::class.java, "res-db").fallbackToDestructiveMigration().build()
 
         override fun doInBackground(vararg params: Void?): List<RestaurantEntity> {
 

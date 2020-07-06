@@ -31,6 +31,7 @@ import org.json.JSONObject
 class HomeFragment : Fragment() {
 
     private lateinit var recyclerRestaurant: RecyclerView
+    private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var allRestaurantsAdapter: AllRestaurantAdapter
     private var restaurantList = arrayListOf<Restaurants>()
     private lateinit var progressBar: ProgressBar
@@ -43,9 +44,11 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        recyclerRestaurant = view.findViewById(R.id.recyclerRestaurants)
         progressBar = view?.findViewById(R.id.progressBar) as ProgressBar
         rlLoading = view.findViewById(R.id.rlLoading) as RelativeLayout
         rlLoading.visibility = View.VISIBLE
+        layoutManager = LinearLayoutManager(activity)
 
         /*A separate method for setting up our recycler view*/
         setUpRecycler(view)
@@ -54,7 +57,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpRecycler(view: View) {
-        recyclerRestaurant = view.findViewById(R.id.recyclerRestaurants) as RecyclerView
 
         /*Create a queue for sending the request*/
         val queue = Volley.newRequestQueue(activity as Context)
@@ -88,20 +90,23 @@ class HomeFragment : Fragment() {
                                     resObject.getString("image_url")
                                 )
                                 restaurantList.add(restaurant)
-                                if (activity != null) {
-                                    allRestaurantsAdapter =
-                                        AllRestaurantAdapter(
-                                            restaurantList,
-                                            activity as Context
-                                        )
-                                    val mLayoutManager = LinearLayoutManager(activity)
-                                    recyclerRestaurant.layoutManager = mLayoutManager
-                                    recyclerRestaurant.itemAnimator = DefaultItemAnimator()
-                                    recyclerRestaurant.adapter = allRestaurantsAdapter
-                                    recyclerRestaurant.setHasFixedSize(true)
-                                }
+                                allRestaurantsAdapter =
+                                    AllRestaurantAdapter(
+                                        restaurantList,
+                                        activity as Context
+                                    )
+                                recyclerRestaurant.adapter = allRestaurantsAdapter
+                                recyclerRestaurant.layoutManager = layoutManager
+                                recyclerRestaurant.setHasFixedSize(true)
+
 
                             }
+                        } else {
+                            Toast.makeText(
+                                activity as Context,
+                                "Some error occured",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } catch (e: JSONException) {
                         e.printStackTrace()
@@ -115,13 +120,10 @@ class HomeFragment : Fragment() {
                 override fun getHeaders(): MutableMap<String, String> {
                     val headers = HashMap<String, String>()
                     headers["Content-type"] = "application/json"
-
-                    /*The below used token will not work, kindly use the token provided to you in the training*/
                     headers["token"] = "9bf534118365f1"
                     return headers
                 }
             }
-
             queue.add(jsonObjectRequest)
 
         } else {

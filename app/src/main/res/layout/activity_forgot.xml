@@ -42,15 +42,15 @@
         android:padding="10dp" />
 
     <EditText
-        android:id="@+id/etPasswordForget"
+        android:id="@+id/etEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/etMobileForget"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="15dp"
         android:background="@android:color/white"
-        android:hint="@string/password"
-        android:inputType="textPassword"
+        android:hint="@string/email_adress"
+        android:inputType="textEmailAddress"
         android:maxLength="20"
         android:maxLines="1"
         android:padding="10dp" />
@@ -59,7 +59,7 @@
         android:id="@+id/btnNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etPasswordForget"
+        android:layout_below="@id/etEmail"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="20dp"
         android:background="@color/colorPrimaryDark"
