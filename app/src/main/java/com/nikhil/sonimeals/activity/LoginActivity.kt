@@ -9,7 +9,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.internshala.higherorderfunctionalitiessolution.util.ConnectionManager
+import com.internshala.higherorderfunctionalitiessolution.util.LOGIN
 import com.nikhil.sonimeals.R
+import org.json.JSONObject
+import java.util.HashMap
 
 
 class LoginActivity : AppCompatActivity() {
@@ -19,8 +27,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var btnLogin: Button
     private lateinit var txtForgot: TextView
     private lateinit var txtRegister: TextView
-    private val validmobile = "0123456789"
-    private val validpassword = arrayOf("soniMeals", "nikhil", "pankaj", "pooja")
+
+
     lateinit var sharedPreferences: SharedPreferences
 
 
@@ -49,29 +57,51 @@ class LoginActivity : AppCompatActivity() {
         title = "Login"
 
         btnLogin.setOnClickListener {
+
+            val queue = Volley.newRequestQueue(this)
+
             val mobile = etMobile.text.toString()
             val password = etPassword.text.toString()
-            if (mobile == validmobile) {
-                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                when (password) {
-                    validpassword[0], validpassword[1], validpassword[2], validpassword[3] -> {
-//                        intent.putExtra("Mobile",mobile)
-//                        intent.putExtra("Password",password)
-                        savePreferences()
-                        startActivity(intent)
+
+            if ((mobile.length >= 10) && (password.length <= 4)) {
+                if (ConnectionManager().isNetworkAvailable(this@LoginActivity)) {
+                    val params = JSONObject()
+                    params.put("mobile_number", mobile)
+                    params.put("password", password)
+                    val loginRequest = object :
+                        JsonObjectRequest(Request.Method.POST, LOGIN, params, Response.Listener {
+                            val data = it.getJSONObject("data")
+                            if (data.getBoolean("success")) {
+                                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                                startActivity(intent)
+                            } else {
+                                val msg = data.getString("errorMessage")
+                                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+                            }
+                        }, Response.ErrorListener {
+                            Toast.makeText(this@LoginActivity, "Error $it", Toast.LENGTH_SHORT)
+                                .show()
+                        }) {
+                        override fun getHeaders(): MutableMap<String, String> {
+                            val headers = HashMap<String, String>()
+                            headers["Content-type"] = "application/json"
+                            headers["token"] = "9bf534118365f1"
+                            return headers
+                        }
                     }
-                    else -> Toast.makeText(
+                    queue.add(loginRequest)
+                } else {
+                    Toast.makeText(
                         this@LoginActivity,
-                        "Incorrect Password",
-                        Toast.LENGTH_LONG
+                        " No Internet Connection",
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             } else {
-                Toast.makeText(this@LoginActivity, "Incorrect Credentials!", Toast.LENGTH_LONG)
+                Toast.makeText(this@LoginActivity, "Invalid Credentials!", Toast.LENGTH_LONG)
                     .show()
             }
         }
-
         txtForgot.setOnClickListener {
             val intent = Intent(this@LoginActivity, ForgotActivity::class.java)
             startActivity(intent)
@@ -81,7 +111,6 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
             startActivity(intent)
         }
-
     }
 
     fun savePreferences() {

@@ -1,49 +1,48 @@
 package com.nikhil.sonimeals.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.AsyncTask
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.nikhil.sonimeals.R
+import com.nikhil.sonimeals.database.CartDatabase
 import com.nikhil.sonimeals.database.CartEntity
-import com.nikhil.sonimeals.database.RestaurantDatabase
 import com.nikhil.sonimeals.model.MenuItem
 
 class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
-    RecyclerView.Adapter<MenuAdapter.MenuViewHolder>() {
+    RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
 
-    class MenuViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val txtName: TextView = view.findViewById(R.id.txtName)
-        val txtPrice: TextView = view.findViewById(R.id.txtPrice)
-        val llParent: TextView = view.findViewById(R.id.llParent)
+        val txtPrice: TextView = view.findViewById(R.id.txtCost)
+        val llParent: LinearLayout = view.findViewById(R.id.llParent)
         val btnAdd: TextView = view.findViewById(R.id.btnAdd)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuAdapter.ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.recycler_menu, parent, false)
-        return MenuViewHolder(view)
+        return ViewHolder(view)
     }
 
     override fun getItemCount(): Int {
         return itemList.size
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
         holder.txtName.text = item.name
-        holder.txtPrice.text = "Rs. ${item.cost_for_one}"
+        holder.txtPrice.text = "Rs.${item.cost_for_one}"
 
         val itemEntity = CartEntity(
-            item.id.toInt(),
-            item.name.toString(),
-            item.cost_for_one.toString()
+            item.id,
+            item.name,
+            item.cost_for_one
         )
 
         val checkItem = CartDb(context, itemEntity, 3).execute().get()
@@ -51,19 +50,21 @@ class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
             holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.addFav))
             holder.btnAdd.text = "Add"
         } else {
-            holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.removeFav))
             holder.btnAdd.text = "Remove"
+            holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.removeFav))
         }
 
         holder.btnAdd.setOnClickListener {
 
             val checkItem = CartDb(context, itemEntity, 3).execute().get()
             if (!checkItem) {
+                val remove = CartDb(context, itemEntity, 2).execute()
                 holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.addFav))
                 holder.btnAdd.text = "Add"
             } else {
-                holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.removeFav))
+                val add = CartDb(context, itemEntity, 1).execute()
                 holder.btnAdd.text = "Remove"
+                holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.removeFav))
             }
         }
 
@@ -73,7 +74,8 @@ class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
         AsyncTask<Void, Void, Boolean>() {
         override fun doInBackground(vararg params: Void?): Boolean {
             val cartDb =
-                Room.databaseBuilder(context, RestaurantDatabase::class.java, "cart-db").fallbackToDestructiveMigration().build()
+                Room.databaseBuilder(context, CartDatabase::class.java, "cart-db")
+                    .fallbackToDestructiveMigration().build()
 
             when (mode) {
                 1 -> {
@@ -92,7 +94,7 @@ class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
 //                    Item
                     val item = cartDb.cartDao().getItem(item.id)
                     cartDb.close()
-                    return true
+                    return item != null
                 }
             }
             return false

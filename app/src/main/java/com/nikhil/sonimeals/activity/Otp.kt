@@ -38,11 +38,13 @@ class Otp : AppCompatActivity() {
                 val pass = etNewPass.text.toString()
                 val cnfrmPass = etCnfrmPass.text.toString()
                 if (pass == cnfrmPass) {
+
                     val queue = Volley.newRequestQueue(this)
                     val params = JSONObject()
                     params.put("mobile_number", mobile)
                     params.put("password", pass)
                     params.put("otp", otp)
+
                     val resetReq = object : JsonObjectRequest(
                         Request.Method.POST,
                         RESET_PASSWORD,
@@ -65,16 +67,19 @@ class Otp : AppCompatActivity() {
                         Response.ErrorListener {
                             Toast.makeText(this, "Error- $it", Toast.LENGTH_LONG).show()
                         }) {
-
+                        override fun getHeaders(): MutableMap<String, String> {
+                            val headers = HashMap<String, String>()
+                            headers["Content-type"] = "application/json"
+                            headers["token"] = "9bf534118365f1"
+                            return headers
+                        }
                     }
+                    queue.add(resetReq)
 
                 } else {
-
+                    Toast.makeText(this, "Password do not match!!", Toast.LENGTH_LONG).show()
                 }
-
             }
-
-        } else {
 
         }
     }

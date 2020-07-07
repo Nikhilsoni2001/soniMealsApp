@@ -51,7 +51,7 @@
         android:background="@android:color/white"
         android:hint="@string/email_adress"
         android:inputType="textEmailAddress"
-        android:maxLength="20"
+        android:maxLength="35"
         android:maxLines="1"
         android:padding="10dp" />
 

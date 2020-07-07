@@ -17,7 +17,7 @@ import com.android.volley.toolbox.Volley
 import com.internshala.higherorderfunctionalitiessolution.util.FETCH_RESTAURANTS
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.adapter.MenuAdapter
-import com.nikhil.sonimeals.database.RestaurantDatabase
+import com.nikhil.sonimeals.database.CartDatabase
 import com.nikhil.sonimeals.model.MenuItem
 import java.util.HashMap
 
@@ -36,8 +36,8 @@ class RestaurantActivity : AppCompatActivity() {
 
             recyclerRestaurant = findViewById(R.id.recyclerRestaurant)
             layoutManager = LinearLayoutManager(this)
+        val id = intent.getIntExtra("restaurant_id", 1)
 
-            val id = intent.getStringExtra("restaurant_id")
 
             val queue = Volley.newRequestQueue(this)
             val url = "$FETCH_RESTAURANTS/$id"
@@ -52,8 +52,8 @@ class RestaurantActivity : AppCompatActivity() {
                         for (i in 0 until menu.length()) {
                             val item = menu.getJSONObject(i)
                             val menuObject = MenuItem(
+                                item.getInt("id"),
                                 item.getString("name"),
-                                item.getString("id"),
                                 item.getString("cost_for_one"),
                                 item.getString("restaurant_id")
                             )
@@ -63,7 +63,8 @@ class RestaurantActivity : AppCompatActivity() {
                             recyclerRestaurant.layoutManager = layoutManager
                         }
                     } else {
-                        Toast.makeText(this, data.getString("error_message"), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, data.getString("error_message"), Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }, Response.ErrorListener {
                     Toast.makeText(this, "Error - $it", Toast.LENGTH_SHORT).show()
@@ -106,11 +107,11 @@ class RestaurantActivity : AppCompatActivity() {
 
     class Cart(val context: Context, val mode: Int) : AsyncTask<Void, Void, Boolean>() {
         override fun doInBackground(vararg params: Void?): Boolean {
-            val db = Room.databaseBuilder(context, RestaurantDatabase::class.java, "cart-db")
+            val db = Room.databaseBuilder(context, CartDatabase::class.java, "cart-db")
                 .fallbackToDestructiveMigration().build()
             when (mode) {
                 1 -> {
-                    val cartItems = db.cartDao().getAllCartItems()
+                    val cartItems = db.cartDao().getCart()
                     print("Cart $cartItems")
                     return cartItems.isEmpty()
                 }

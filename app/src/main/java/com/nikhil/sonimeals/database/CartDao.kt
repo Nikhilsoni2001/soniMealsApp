@@ -15,7 +15,7 @@ interface CartDao {
     fun delete(cartEntity: CartEntity)
 
     @Query("SELECT * FROM cart")
-    fun getAllCartItems(): List<CartEntity>
+    fun getCart(): List<CartEntity>
 
     @Query("SELECT * FROM cart WHERE(id= :id)")
     fun getItem(id: Int): CartEntity

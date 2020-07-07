@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -92,7 +91,7 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
         val resThumbnail = view.findViewById(R.id.imgRestaurantThumbnail) as ImageView
         val restaurantName = view.findViewById(R.id.txtRestaurantName) as TextView
         val rating = view.findViewById(R.id.txtRestaurantRating) as TextView
-        val cost = view.findViewById(R.id.txtCostForTwo) as TextView
+        val cost = view.findViewById(R.id.txtCost) as TextView
         val cardRestaurant = view.findViewById(R.id.cardRestaurant) as CardView
         val favImage = view.findViewById(R.id.imgIsFav) as ImageView
     }
