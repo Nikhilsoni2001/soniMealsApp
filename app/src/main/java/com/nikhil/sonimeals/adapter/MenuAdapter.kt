@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.nikhil.sonimeals.R
+import com.nikhil.sonimeals.activity.MenuActivity
 import com.nikhil.sonimeals.database.CartDatabase
 import com.nikhil.sonimeals.database.CartEntity
 import com.nikhil.sonimeals.model.MenuItem
@@ -58,9 +59,9 @@ class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
         }
 
         holder.btnAdd.setOnClickListener {
-
             val checkItem = CartDb(context, itemEntity, 3).execute().get()
             if (!checkItem) {
+                MenuActivity().onAddItemClick(item)
                 val add = CartDb(context, itemEntity, 1).execute()
                 val result = add.get()
                 if (result) {
@@ -79,6 +80,7 @@ class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
                 val remove = CartDb(context, itemEntity, 2).execute()
                 val result = remove.get()
                 if (result) {
+                    MenuActivity().onRemoveItemClick(item)
                     Toast.makeText(
                         context,
                         "Item removed from favourites!!",

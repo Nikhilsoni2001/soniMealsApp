@@ -8,6 +8,14 @@
     android:orientation="vertical"
     tools:context=".activity.CartActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/cartToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

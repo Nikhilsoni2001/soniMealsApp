@@ -7,10 +7,19 @@
     android:background="@color/colorPrimary"
     tools:context=".activity.MenuActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/ResMenuToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
     <TextView
         android:id="@+id/tvHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/ResMenuToolbar"
         android:layout_margin="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
@@ -55,6 +64,19 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 

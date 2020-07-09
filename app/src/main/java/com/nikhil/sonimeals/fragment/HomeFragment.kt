@@ -140,4 +140,9 @@ class HomeFragment : Fragment() {
 
     }
 
+    override fun onDestroy() {
+        recyclerRestaurant.adapter = null
+        super.onDestroy()
+    }
+
 }

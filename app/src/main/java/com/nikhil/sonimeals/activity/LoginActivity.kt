@@ -76,12 +76,12 @@ class LoginActivity : AppCompatActivity() {
                                 val data = it.getJSONObject("data")
                                 if (data.getBoolean("success")) {
                                     val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                                    val id = data.getInt("user_id")
-                                    val name = data.getString("name")
-                                    val email = data.getString("email")
-                                    val mobile = data.getString("mobile_number")
-                                    val address = data.getString("address")
-                                    savePreferences(id.toString(), name, email, mobile, address)
+//                                    val id = data.getInt("user_id")
+//                                    val name = data.getString("name")
+//                                    val email = data.getString("email")
+//                                    val mobile = data.getString("mobile_number")
+//                                    val address = data.getString("address")
+//                                    savePreferences(id.toString(), name, email, mobile, address)
                                     startActivity(intent)
                                 } else {
                                     val msg = data.getString("errorMessage")

@@ -5,10 +5,15 @@ import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -17,81 +22,129 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
+import com.internshala.higherorderfunctionalitiessolution.util.ConnectionManager
 import com.internshala.higherorderfunctionalitiessolution.util.FETCH_RESTAURANTS
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.adapter.MenuAdapter
 import com.nikhil.sonimeals.database.CartDatabase
 import com.nikhil.sonimeals.model.MenuItem
+import org.json.JSONException
 import java.util.HashMap
 
 class MenuActivity : AppCompatActivity() {
 
+    lateinit var toolbar: Toolbar
     lateinit var recyclerRestaurant: RecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var adapter: MenuAdapter
+    lateinit var rlProgress: RelativeLayout
+    lateinit var progress: ProgressBar
+    lateinit var btnProceedToCart: Button
+    private var orderList = arrayListOf<MenuItem>()
 
-    val items = arrayListOf<MenuItem>()
+    var resId: Int? = null
+    var resName: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
 
-        recyclerRestaurant = findViewById(R.id.recyclerRestaurant)
-
-        layoutManager = LinearLayoutManager(this)
-        val btnProceedToCart: Button = findViewById(R.id.btnProceedToCart)
-
+        toolbar = findViewById(R.id.ResMenuToolbar)
+        btnProceedToCart = findViewById(R.id.btnProceedToCart)
+        rlProgress = findViewById(R.id.rlProgress)
+        progress = findViewById(R.id.progressBar)
         btnProceedToCart.visibility = View.GONE
+        rlProgress.visibility = View.VISIBLE
+        progress.visibility = View.VISIBLE
+
+        recyclerRestaurant = findViewById(R.id.recyclerRestaurant)
+        layoutManager = LinearLayoutManager(this)
+
+        val items = arrayListOf<MenuItem>()
 
         if (intent != null) {
-            val id = intent.getIntExtra("restaurant_id", 1)
-            val resName = intent.getStringExtra("restaurant_name")
+            resId = intent.getIntExtra("restaurant_id", 1)
+            resName = intent.getStringExtra("restaurant_name")
 
-            if (resName == null || id == null) {
+            if (resName == null || resId == null) {
                 finish()
                 Toast.makeText(this, "Some error occurred!!", Toast.LENGTH_SHORT).show()
             }
 
+            setSupportActionBar(toolbar)
             supportActionBar?.title = resName
+            supportActionBar?.setHomeButtonEnabled(true)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
             val queue = Volley.newRequestQueue(this)
-            val url = "$FETCH_RESTAURANTS/$id"
+            val url = "$FETCH_RESTAURANTS/$resId"
 
+            if (ConnectionManager().isNetworkAvailable(this)) {
+                val restaurantRequest =
+                    object : JsonObjectRequest(Request.Method.GET, url, null, Response.Listener {
+                        try {
 
-            val restaurantRequest =
-                object : JsonObjectRequest(Request.Method.GET, url, null, Response.Listener {
-                    val data = it.getJSONObject("data")
-                    if (data.getBoolean("success")) {
+                            rlProgress.visibility = View.GONE
+                            progress.visibility = View.GONE
 
-                        val menu = data.getJSONArray("data")
+                            val data = it.getJSONObject("data")
+                            if (data.getBoolean("success")) {
 
-                        for (i in 0 until menu.length()) {
-                            val item = menu.getJSONObject(i)
-                            val menuObject = MenuItem(
-                                item.getInt("id"),
-                                item.getString("name"),
-                                item.getString("cost_for_one"),
-                                item.getString("restaurant_id")
-                            )
-                            items.add(menuObject)
-                            adapter = MenuAdapter(this, items)
-                            recyclerRestaurant.adapter = adapter
-                            recyclerRestaurant.layoutManager = layoutManager
+                                val menu = data.getJSONArray("data")
+
+                                for (i in 0 until menu.length()) {
+                                    val item = menu.getJSONObject(i)
+                                    val menuObject = MenuItem(
+                                        item.getInt("id"),
+                                        item.getString("name"),
+                                        item.getString("cost_for_one"),
+                                        item.getString("restaurant_id")
+                                    )
+                                    items.add(menuObject)
+                                    adapter = MenuAdapter(this, items)
+                                    recyclerRestaurant.adapter = adapter
+                                    recyclerRestaurant.layoutManager = layoutManager
+                                }
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    data.getString("error_message"),
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        } catch (e: JSONException) {
+                            Toast.makeText(
+                                this, "Some Unexpected Error Occurred", Toast.LENGTH_SHORT
+                            ).show()
                         }
-                    } else {
-                        Toast.makeText(this, data.getString("error_message"), Toast.LENGTH_SHORT)
-                            .show()
+
+                    }, Response.ErrorListener {
+                        Toast.makeText(this, "Error - $it", Toast.LENGTH_SHORT).show()
+                    }) {
+                        override fun getHeaders(): MutableMap<String, String> {
+                            val headers = HashMap<String, String>()
+                            headers["Content-type"] = "application/json"
+                            headers["token"] = "9bf534118365f1"
+                            return headers
+                        }
                     }
-                }, Response.ErrorListener {
-                    Toast.makeText(this, "Error - $it", Toast.LENGTH_SHORT).show()
-                }) {
-                    override fun getHeaders(): MutableMap<String, String> {
-                        val headers = HashMap<String, String>()
-                        headers["Content-type"] = "application/json"
-                        headers["token"] = "9bf534118365f1"
-                        return headers
-                    }
+                queue.add(restaurantRequest)
+            } else {
+                val dialog = AlertDialog.Builder(this)
+                dialog.setTitle("Error")
+                dialog.setMessage("No Internet Connection")
+                dialog.setPositiveButton("Open Settings") { text, listener ->
+                    val intent = Intent(Settings.ACTION_WIRELESS_SETTINGS)
+                    startActivity(intent)
+                    finish()
                 }
-            queue.add(restaurantRequest)
+                dialog.setNegativeButton("Exit") { text, listener ->
+                    ActivityCompat.finishAffinity(this)
+                }
+                dialog.create()
+                dialog.show()
+            }
         } else {
             Toast.makeText(
                 this@MenuActivity,
@@ -99,8 +152,34 @@ class MenuActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        val checkCart = Cart(this, 1).execute().get()
-        if (!checkCart) {
+
+        btnProceedToCart.setOnClickListener {
+
+            val gson = Gson()
+
+            val items = gson.toJson(orderList)
+
+            val data = Bundle()
+            data.putString("res_id", resId.toString())
+            data.putString("res_name", resName)
+            data.putString("food_items", items)
+            val cartIntent = Intent(this, CartActivity::class.java)
+            cartIntent.putExtra("data", data)
+            startActivity(cartIntent)
+        }
+
+    }
+
+    fun onAddItemClick(foodItem: MenuItem) {
+        orderList.add(foodItem)
+        if (orderList.size > 0) {
+            btnProceedToCart.visibility = View.VISIBLE
+        }
+    }
+
+    fun onRemoveItemClick(foodItem: MenuItem) {
+        orderList.remove(foodItem)
+        if (orderList.isEmpty()) {
             btnProceedToCart.visibility = View.GONE
         }
     }
@@ -149,8 +228,13 @@ class MenuActivity : AppCompatActivity() {
 
     }
 
-    fun proceedToCart() {
-        val gson = Gson()
-        val orderrList  = gson.toJson(items)
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        val itemId = item.itemId
+        if (itemId == android.R.id.home) {
+            super.onBackPressed()
+            return true
+        }
+        return onOptionsItemSelected(item)
     }
+
 }
