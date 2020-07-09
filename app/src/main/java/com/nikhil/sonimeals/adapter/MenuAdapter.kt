@@ -5,8 +5,8 @@ import android.os.AsyncTask
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.nikhil.sonimeals.R
@@ -16,6 +16,7 @@ import com.nikhil.sonimeals.model.MenuItem
 
 class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
     RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
+
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val txtName: TextView = view.findViewById(R.id.txtName)
@@ -47,27 +48,54 @@ class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
 
         val checkItem = CartDb(context, itemEntity, 3).execute().get()
         if (!checkItem) {
-            holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.addFav))
             holder.btnAdd.text = "Add"
+            val fav = ContextCompat.getColor(context, R.color.addFav)
+            holder.btnAdd.setBackgroundColor(fav)
         } else {
             holder.btnAdd.text = "Remove"
-            holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.removeFav))
+            val removeFav = ContextCompat.getColor(context, R.color.removeFav)
+            holder.btnAdd.setBackgroundColor(removeFav)
         }
 
         holder.btnAdd.setOnClickListener {
 
             val checkItem = CartDb(context, itemEntity, 3).execute().get()
             if (!checkItem) {
-                val remove = CartDb(context, itemEntity, 2).execute()
-                holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.addFav))
-                holder.btnAdd.text = "Add"
-            } else {
                 val add = CartDb(context, itemEntity, 1).execute()
-                holder.btnAdd.text = "Remove"
-                holder.btnAdd.setBackgroundColor(context.resources.getColor(R.color.removeFav))
+                val result = add.get()
+                if (result) {
+                    Toast.makeText(context, "Item is added", Toast.LENGTH_SHORT).show()
+                    holder.btnAdd.text = "Remove"
+                    val removeFav = ContextCompat.getColor(context, R.color.removeFav)
+                    holder.btnAdd.setBackgroundColor(removeFav)
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Some error occurred!!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                val remove = CartDb(context, itemEntity, 2).execute()
+                val result = remove.get()
+                if (result) {
+                    Toast.makeText(
+                        context,
+                        "Item removed from favourites!!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    holder.btnAdd.text = "Add"
+                    val fav = ContextCompat.getColor(context, R.color.addFav)
+                    holder.btnAdd.setBackgroundColor(fav)
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Some error occurred!!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
-
     }
 
     class CartDb(val context: Context, val item: CartEntity, val mode: Int) :

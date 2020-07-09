@@ -13,7 +13,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.nikhil.sonimeals.R
-import com.nikhil.sonimeals.activity.RestaurantActivity
+import com.nikhil.sonimeals.activity.MenuActivity
 import com.nikhil.sonimeals.database.RestaurantDatabase
 import com.nikhil.sonimeals.database.RestaurantEntity
 import com.nikhil.sonimeals.model.Restaurants
@@ -46,8 +46,9 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
         Picasso.get().load(resObject.imageUrl).error(R.drawable.res_image).into(p0.resThumbnail)
 
         p0.cardRestaurant.setOnClickListener {
-           val intent = Intent(context, RestaurantActivity::class.java)
+            val intent = Intent(context, MenuActivity::class.java)
             intent.putExtra("restaurant_id", resObject.id)
+            intent.putExtra("restaurant_name", resObject.name)
             context.startActivity(intent)
         }
 
@@ -147,7 +148,9 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
     ) :
         AsyncTask<Void, Void, List<String>>() {
 
-        val db = Room.databaseBuilder(context, RestaurantDatabase::class.java, "res-db").fallbackToDestructiveMigration().build()
+        val db = Room.databaseBuilder(context, RestaurantDatabase::class.java, "res-db")
+            .fallbackToDestructiveMigration().build()
+
         override fun doInBackground(vararg params: Void?): List<String> {
 
             val list = db.restaurantDao().getAllRestaurants()

@@ -16,6 +16,7 @@ import com.android.volley.toolbox.Volley
 import com.internshala.higherorderfunctionalitiessolution.util.ConnectionManager
 import com.internshala.higherorderfunctionalitiessolution.util.LOGIN
 import com.nikhil.sonimeals.R
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.HashMap
 
@@ -34,8 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences =
-            getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE)
 
         val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
         setContentView(R.layout.activity_login)
@@ -70,13 +70,30 @@ class LoginActivity : AppCompatActivity() {
                     params.put("password", password)
                     val loginRequest = object :
                         JsonObjectRequest(Request.Method.POST, LOGIN, params, Response.Listener {
-                            val data = it.getJSONObject("data")
-                            if (data.getBoolean("success")) {
-                                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                                startActivity(intent)
-                            } else {
-                                val msg = data.getString("errorMessage")
-                                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+
+                            try {
+
+                                val data = it.getJSONObject("data")
+                                if (data.getBoolean("success")) {
+                                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                                    val id = data.getInt("user_id")
+                                    val name = data.getString("name")
+                                    val email = data.getString("email")
+                                    val mobile = data.getString("mobile_number")
+                                    val address = data.getString("address")
+                                    savePreferences(id.toString(), name, email, mobile, address)
+                                    startActivity(intent)
+                                } else {
+                                    val msg = data.getString("errorMessage")
+                                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+                                }
+                            } catch (e: JSONException) {
+                                println(e)
+                                Toast.makeText(
+                                    this@LoginActivity,
+                                    "Some unexpected Error occurred",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }, Response.ErrorListener {
                             Toast.makeText(this@LoginActivity, "Error $it", Toast.LENGTH_SHORT)
@@ -113,8 +130,13 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun savePreferences() {
+    fun savePreferences(id: String, name: String, email: String, mobile: String, address: String) {
         sharedPreferences.edit().putBoolean("isLoggedIn", true).apply()
+        sharedPreferences.edit().putString("user_id", id).apply()
+        sharedPreferences.edit().putString("user_name", name).apply()
+        sharedPreferences.edit().putString("user_email", email).apply()
+        sharedPreferences.edit().putString("user_number", mobile).apply()
+        sharedPreferences.edit().putString("user_address", address).apply()
     }
 
     override fun onPause() {

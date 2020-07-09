@@ -1,5 +1,6 @@
 package com.nikhil.sonimeals.activity
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,6 +29,10 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        val sharedPreferences = getSharedPreferences(
+            getString(R.string.preferences_file_name),
+            Context.MODE_PRIVATE
+        )
 
         etName = findViewById(R.id.etName)
         etEmail = findViewById(R.id.etEmail)
@@ -62,6 +67,18 @@ class RegisterActivity : AppCompatActivity() {
                         JsonObjectRequest(Request.Method.POST, REGISTER, params, Response.Listener {
                             val data = it.getJSONObject("data")
                             if (data.getBoolean("success")) {
+                                sharedPreferences?.edit()
+                                    ?.putString("user_id", data.getString("user_id"))?.apply()
+                                sharedPreferences?.edit()
+                                    ?.putString("user_name", data.getString("name"))?.apply()
+                                sharedPreferences?.edit()
+                                    ?.putString("user_email", data.getString("email"))?.apply()
+                                sharedPreferences?.edit()
+                                    ?.putString("user_number", data.getString("mobile_number"))
+                                    ?.apply()
+                                sharedPreferences?.edit()
+                                    ?.putString("user_address", data.getString("address"))?.apply()
+                                sharedPreferences?.edit()?.putBoolean("Logged_in", true)?.apply()
                                 val intent = Intent(this, HomeActivity::class.java)
                                 startActivity(intent)
                             } else {

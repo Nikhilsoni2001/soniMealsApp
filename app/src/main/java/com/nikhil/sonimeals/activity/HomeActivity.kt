@@ -1,11 +1,13 @@
 package com.nikhil.sonimeals.activity
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -23,6 +25,7 @@ class HomeActivity : AppCompatActivity() {
     lateinit var toolbar: Toolbar
     lateinit var frame: FrameLayout
     lateinit var navigationView: NavigationView
+    lateinit var drawerHeader: TextView
 
     var previousItem: MenuItem? = null
 
@@ -30,8 +33,13 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        val sharedPreferences =
+            getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE)
+
         //Initializations
         init()
+
+        drawerHeader.setText("${sharedPreferences.getString("username", "Username")}")
 
         //adding toolbar
         setUpToolbar()
@@ -176,6 +184,8 @@ class HomeActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         frame = findViewById(R.id.frame)
         navigationView = findViewById(R.id.navigationView)
+        val headerView = navigationView.getHeaderView(0)
+        drawerHeader = headerView.findViewById(R.id.tvName)
     }
 
 }

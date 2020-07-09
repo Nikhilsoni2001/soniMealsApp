@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
 import com.internshala.higherorderfunctionalitiessolution.util.FETCH_RESTAURANTS
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.adapter.MenuAdapter
@@ -21,7 +24,7 @@ import com.nikhil.sonimeals.database.CartDatabase
 import com.nikhil.sonimeals.model.MenuItem
 import java.util.HashMap
 
-class RestaurantActivity : AppCompatActivity() {
+class MenuActivity : AppCompatActivity() {
 
     lateinit var recyclerRestaurant: RecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
@@ -31,16 +34,28 @@ class RestaurantActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_restaurant)
+        setContentView(R.layout.activity_menu)
+
+        recyclerRestaurant = findViewById(R.id.recyclerRestaurant)
+
+        layoutManager = LinearLayoutManager(this)
+        val btnProceedToCart: Button = findViewById(R.id.btnProceedToCart)
+
+        btnProceedToCart.visibility = View.GONE
+
         if (intent != null) {
+            val id = intent.getIntExtra("restaurant_id", 1)
+            val resName = intent.getStringExtra("restaurant_name")
 
-            recyclerRestaurant = findViewById(R.id.recyclerRestaurant)
-            layoutManager = LinearLayoutManager(this)
-        val id = intent.getIntExtra("restaurant_id", 1)
+            if (resName == null || id == null) {
+                finish()
+                Toast.makeText(this, "Some error occurred!!", Toast.LENGTH_SHORT).show()
+            }
 
-
+            supportActionBar?.title = resName
             val queue = Volley.newRequestQueue(this)
             val url = "$FETCH_RESTAURANTS/$id"
+
 
             val restaurantRequest =
                 object : JsonObjectRequest(Request.Method.GET, url, null, Response.Listener {
@@ -77,7 +92,16 @@ class RestaurantActivity : AppCompatActivity() {
                     }
                 }
             queue.add(restaurantRequest)
-
+        } else {
+            Toast.makeText(
+                this@MenuActivity,
+                "Some unexpected error occured",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        val checkCart = Cart(this, 1).execute().get()
+        if (!checkCart) {
+            btnProceedToCart.visibility = View.GONE
         }
     }
 
@@ -123,5 +147,10 @@ class RestaurantActivity : AppCompatActivity() {
             return false
         }
 
+    }
+
+    fun proceedToCart() {
+        val gson = Gson()
+        val orderrList  = gson.toJson(items)
     }
 }
