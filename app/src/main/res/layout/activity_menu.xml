@@ -49,23 +49,18 @@
         android:layout_margin="10dp"
         android:padding="2dp" />
 
-    <RelativeLayout
+
+    <Button
+        android:id="@+id/btnProceedToCart"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/btnProceedToCart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorPrimaryDark"
-            android:text="Proceed to Cart"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:visibility="visible" />
-
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
+        android:text="Proceed to Cart"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/rlProgress"

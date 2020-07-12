@@ -7,66 +7,80 @@
     android:background="@color/colorPrimary"
     tools:context=".activity.ForgotActivity">
 
-    <ImageView
-        android:id="@+id/imgMainLogo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:src="@mipmap/ic_logo" />
+    <RelativeLayout
+        android:id="@+id/rlContentMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
 
-    <TextView
-        android:id="@+id/txtText"
+        <ImageView
+            android:id="@+id/imgMainLogo"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:src="@mipmap/ic_logo" />
+
+        <TextView
+            android:id="@+id/txtText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgMainLogo"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/enter_your_registered_mobile_number_and_email_below"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
+
+
+        <EditText
+            android:id="@+id/etMobileForget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtText"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/white"
+            android:hint="@string/mobile_number_10_digits"
+            android:inputType="phone"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/etMobileForget"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/white"
+            android:hint="@string/email_adress"
+            android:inputType="textEmailAddress"
+            android:maxLength="35"
+            android:maxLines="1"
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/etEmail"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/next"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imgMainLogo"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/enter_your_registered_mobile_number_and_email_below"
-        android:textColor="@android:color/white"
-        android:textSize="17sp" />
-
-
-    <EditText
-        android:id="@+id/etMobileForget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtText"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/white"
-        android:hint="@string/mobile_number_10_digits"
-        android:inputType="phone"
-        android:maxLength="10"
-        android:maxLines="1"
-        android:padding="10dp" />
-
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/etMobileForget"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="15dp"
-        android:background="@android:color/white"
-        android:hint="@string/email_adress"
-        android:inputType="textEmailAddress"
-        android:maxLength="35"
-        android:maxLines="1"
-        android:padding="10dp" />
-
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/etEmail"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="@string/next"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-
+        android:layout_centerInParent="true"
+        android:visibility="visible" />
 </RelativeLayout>

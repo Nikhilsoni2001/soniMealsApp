@@ -1,14 +1,11 @@
 package com.nikhil.sonimeals.activity
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -16,6 +13,8 @@ import com.android.volley.toolbox.Volley
 import com.internshala.higherorderfunctionalitiessolution.util.ConnectionManager
 import com.internshala.higherorderfunctionalitiessolution.util.LOGIN
 import com.nikhil.sonimeals.R
+import com.nikhil.sonimeals.util.SessionManager
+import com.nikhil.sonimeals.util.Validations
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.HashMap
@@ -23,72 +22,109 @@ import java.util.HashMap
 
 class LoginActivity : AppCompatActivity() {
 
+    //    Declaring All the views present in activity_login.xml
     lateinit var etMobile: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var txtForgot: TextView
     private lateinit var txtRegister: TextView
+    lateinit var progress: ProgressBar
 
 
+    //    For Handling Shared Preference
+    lateinit var sessionManager: SessionManager
     lateinit var sharedPreferences: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE)
-
-        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
         setContentView(R.layout.activity_login)
 
-        if (isLoggedIn) {
-            val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-            sharedPreferences.edit().clear().apply()
-            startActivity(intent)
-            finish()
-        }
-
+//        Initializations
         etMobile = findViewById(R.id.etMobile)
         etPassword = findViewById(R.id.etPassword)
         btnLogin = findViewById(R.id.btnLogin)
         txtForgot = findViewById(R.id.txtForgot)
         txtRegister = findViewById(R.id.txtSignup)
+        progress = findViewById(R.id.progressBar)
+        progress.visibility = View.GONE
 
+//        Initializing Session Variables
+        sessionManager = SessionManager(this)
+        sharedPreferences =
+            this.getSharedPreferences(sessionManager.PREF_NAME, sessionManager.PRIVATE_MODE)
 
-        title = "Login"
+        /*Clicking on this text takes you to the forgot password activity*/
+        txtForgot.setOnClickListener {
+            val intent = Intent(this@LoginActivity, ForgotActivity::class.java)
+            startActivity(intent)
+        }
+
+        /*Clicking on this text takes you to the Register activity*/
+        txtRegister.setOnClickListener {
+            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+
 
         btnLogin.setOnClickListener {
 
-            val queue = Volley.newRequestQueue(this)
-
+            progress.visibility = View.VISIBLE
             val mobile = etMobile.text.toString()
             val password = etPassword.text.toString()
 
-            if ((mobile.length >= 10) && (password.length <= 4)) {
+            /*First validate the mobile number and password length*/
+            if (Validations.validateMobile(mobile) && Validations.validatePasswordLength(password)) {
                 if (ConnectionManager().isNetworkAvailable(this@LoginActivity)) {
+
+                    /*Create the queue for the request*/
+                    val queue = Volley.newRequestQueue(this)
+
+//                    Params
                     val params = JSONObject()
                     params.put("mobile_number", mobile)
                     params.put("password", password)
+
+                    /*Finally send the json object request*/
                     val loginRequest = object :
                         JsonObjectRequest(Request.Method.POST, LOGIN, params, Response.Listener {
 
                             try {
-
                                 val data = it.getJSONObject("data")
                                 if (data.getBoolean("success")) {
-                                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-//                                    val id = data.getInt("user_id")
-//                                    val name = data.getString("name")
-//                                    val email = data.getString("email")
-//                                    val mobile = data.getString("mobile_number")
-//                                    val address = data.getString("address")
-//                                    savePreferences(id.toString(), name, email, mobile, address)
+                                    val response = data.getJSONObject("data")
+
+                                    sharedPreferences.edit()
+                                        .putInt("user_id", response.getString("user_id").toInt())
+                                        .apply()
+                                    sharedPreferences.edit()
+                                        .putString("user_name", response.getString("name")).apply()
+                                    sharedPreferences.edit()
+                                        .putString(
+                                            "user_mobile_number",
+                                            response.getString("mobile_number")
+                                        )
+                                        .apply()
+                                    sharedPreferences.edit()
+                                        .putString("user_address", response.getString("address"))
+                                        .apply()
+                                    sharedPreferences.edit()
+                                        .putString("user_email", response.getString("email"))
+                                        .apply()
+                                    sessionManager.setLogin(true)
+
+                                    val intent =
+                                        Intent(this@LoginActivity, HomeActivity::class.java)
+                                    progress.visibility = View.GONE
                                     startActivity(intent)
+                                    finish()
                                 } else {
+                                    progress.visibility = View.GONE
                                     val msg = data.getString("errorMessage")
                                     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
                                 }
                             } catch (e: JSONException) {
-                                println(e)
+                                e.printStackTrace()
                                 Toast.makeText(
                                     this@LoginActivity,
                                     "Some unexpected Error occurred",
@@ -96,6 +132,7 @@ class LoginActivity : AppCompatActivity() {
                                 ).show()
                             }
                         }, Response.ErrorListener {
+                            progress.visibility = View.GONE
                             Toast.makeText(this@LoginActivity, "Error $it", Toast.LENGTH_SHORT)
                                 .show()
                         }) {
@@ -108,6 +145,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                     queue.add(loginRequest)
                 } else {
+                    progress.visibility = View.GONE
                     Toast.makeText(
                         this@LoginActivity,
                         " No Internet Connection",
@@ -115,32 +153,11 @@ class LoginActivity : AppCompatActivity() {
                     ).show()
                 }
             } else {
-                Toast.makeText(this@LoginActivity, "Invalid Credentials!", Toast.LENGTH_LONG)
+                progress.visibility = View.GONE
+                Toast.makeText(this@LoginActivity, "Invalid Phone or Password", Toast.LENGTH_SHORT)
                     .show()
             }
         }
-        txtForgot.setOnClickListener {
-            val intent = Intent(this@LoginActivity, ForgotActivity::class.java)
-            startActivity(intent)
-        }
 
-        txtRegister.setOnClickListener {
-            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
-    fun savePreferences(id: String, name: String, email: String, mobile: String, address: String) {
-        sharedPreferences.edit().putBoolean("isLoggedIn", true).apply()
-        sharedPreferences.edit().putString("user_id", id).apply()
-        sharedPreferences.edit().putString("user_name", name).apply()
-        sharedPreferences.edit().putString("user_email", email).apply()
-        sharedPreferences.edit().putString("user_number", mobile).apply()
-        sharedPreferences.edit().putString("user_address", address).apply()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        finish()
     }
 }

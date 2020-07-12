@@ -1,14 +1,12 @@
 package com.nikhil.sonimeals.activity
 
-import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -16,136 +14,196 @@ import com.android.volley.toolbox.Volley
 import com.internshala.higherorderfunctionalitiessolution.util.ConnectionManager
 import com.internshala.higherorderfunctionalitiessolution.util.REGISTER
 import com.nikhil.sonimeals.R
+import com.nikhil.sonimeals.util.SessionManager
+import com.nikhil.sonimeals.util.Validations
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.HashMap
 
 class RegisterActivity : AppCompatActivity() {
 
+    lateinit var toolbar: Toolbar
     private lateinit var btnRegister: Button
     private lateinit var etName: EditText
-    private lateinit var etEmail: EditText
     private lateinit var etMobile: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var etEmail: EditText
     private lateinit var etDelivery: EditText
-    private lateinit var etPass: EditText
     private lateinit var etCnfrmPass: EditText
     lateinit var progress: ProgressBar
+    lateinit var rlRegister: RelativeLayout
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        val sharedPreferences = getSharedPreferences(
-            getString(R.string.preferences_file_name),
-            Context.MODE_PRIVATE
+
+//        Toolbar
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Register Yourself"
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setTitleTextAppearance(this, R.style.PoppinsTextAppearance)
+
+//        Session Manager
+        sessionManager = SessionManager(this@RegisterActivity)
+        sharedPreferences = this@RegisterActivity.getSharedPreferences(
+            sessionManager.PREF_NAME,
+            sessionManager.PRIVATE_MODE
         )
 
+//        Initializations
         etName = findViewById(R.id.etName)
-        etEmail = findViewById(R.id.etEmail)
         etMobile = findViewById(R.id.etMobile)
-        etDelivery = findViewById(R.id.etDelivery)
-        etPass = findViewById(R.id.etPass)
+        etEmail = findViewById(R.id.etEmail)
+        etPassword = findViewById(R.id.etPass)
         etCnfrmPass = findViewById(R.id.etCnfrmPass)
+        etDelivery = findViewById(R.id.etDelivery)
         btnRegister = findViewById(R.id.btnRegister)
+        rlRegister = findViewById(R.id.rlRegister)
         progress = findViewById(R.id.progressBar)
         progress.visibility = View.GONE
+        rlRegister.visibility = View.VISIBLE
 
         btnRegister.setOnClickListener {
+            rlRegister.visibility = View.INVISIBLE
             progress.visibility = View.VISIBLE
-            val name = etName.text.toString()
-            val mobile = etMobile.text.toString()
-            val email = etEmail.text.toString()
-            val delivery = etDelivery.text.toString()
-            val pass = etPass.text.toString()
-            val cnfrmPass = etCnfrmPass.text.toString()
-            title = "Register Yourself"
 
-            if (ConnectionManager().isNetworkAvailable(this)) {
-                if (name.length == null || mobile.length == null || pass.length == null || email.length == null || delivery.length == null || cnfrmPass.length == null) {
-                    Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
-                } else {
-                    if (pass == cnfrmPass) {
-                        val queue = Volley.newRequestQueue(this)
-                        val params = JSONObject()
-                        params.put("name", name)
-                        params.put("mobile_number", mobile)
-                        params.put("password", pass)
-                        params.put("address", delivery)
-                        params.put("email", email)
+            if (Validations.validateNameLength(etName.text.toString())) {
+                etName.error = null
+                if (Validations.validateEmail(etEmail.text.toString())) {
+                    etEmail.error = null
+                    if (Validations.validateMobile(etMobile.text.toString())) {
+                        etMobile.error = null
+                        if (Validations.validatePasswordLength(etPassword.text.toString())) {
+                            etPassword.error = null
+                            if (Validations.matchPassword(
+                                    etPassword.text.toString(),
+                                    etCnfrmPass.text.toString()
+                                )
+                            ) {
+                                etPassword.error = null
+                                etCnfrmPass.error = null
+                                if (ConnectionManager().isNetworkAvailable(this)) {
+                                    sendRegisterRequest(
+                                        etName.text.toString(),
+                                        etMobile.text.toString(),
+                                        etDelivery.text.toString(),
+                                        etPassword.text.toString(),
+                                        etEmail.text.toString()
+                                    )
 
-                        val registerPostRequest = object :
-                            JsonObjectRequest(
-                                Request.Method.POST,
-                                REGISTER,
-                                params,
-                                Response.Listener {
-                                    val data = it.getJSONObject("data")
-                                    if (data.getBoolean("success")) {
-                                        sharedPreferences?.edit()
-                                            ?.putString("user_id", data.getString("user_id"))
-                                            ?.apply()
-                                        sharedPreferences?.edit()
-                                            ?.putString("user_name", data.getString("name"))
-                                            ?.apply()
-                                        sharedPreferences?.edit()
-                                            ?.putString("user_email", data.getString("email"))
-                                            ?.apply()
-                                        sharedPreferences?.edit()
-                                            ?.putString(
-                                                "user_number",
-                                                data.getString("mobile_number")
-                                            )
-                                            ?.apply()
-                                        sharedPreferences?.edit()
-                                            ?.putString("user_address", data.getString("address"))
-                                            ?.apply()
-                                        sharedPreferences?.edit()?.putBoolean("Logged_in", true)
-                                            ?.apply()
 
-                                        progress.visibility = View.GONE
-
-                                        val intent = Intent(this, HomeActivity::class.java)
-                                        startActivity(intent)
-                                    } else {
-                                        progress.visibility = View.GONE
-                                        val msg = data.getString("errorMessage")
-                                        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-                                    }
-                                },
-                                Response.ErrorListener {
+                                } else {
                                     progress.visibility = View.GONE
-                                    Toast.makeText(this, "Registration failed", Toast.LENGTH_SHORT)
-                                        .show()
-                                }) {
-                            override fun getHeaders(): MutableMap<String, String> {
-                                val headers = HashMap<String, String>()
-                                headers["Content-type"] = "application/json"
-                                headers["token"] = "9bf534118365f1"
-                                return headers
+                                    Toast.makeText(
+                                        this,
+                                        "Passwords do not match",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
+                        } else {
+                            progress.visibility = View.GONE
+
+                            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT)
+                                .show()
                         }
-                        queue.add(registerPostRequest)
-                    } else {
-                        progress.visibility =View.GONE
-                        Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
                     }
                 }
-            } else {
-                progress.visibility = View.GONE
-
-                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 
-    override fun onBackPressed() {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        super.onBackPressed()
+    private fun sendRegisterRequest(
+        name: String,
+        phone: String,
+        address: String,
+        password: String,
+        email: String
+    ) {
+        val queue = Volley.newRequestQueue(this)
+
+        val params = JSONObject()
+        params.put("name", name)
+        params.put("mobile_number", phone)
+        params.put("password", password)
+        params.put("address", address)
+        params.put("email", email)
+
+        val registerPostRequest = object :
+            JsonObjectRequest(
+                Request.Method.POST,
+                REGISTER,
+                params,
+                Response.Listener {
+                    try {
+                        val data = it.getJSONObject("data")
+                        if (data.getBoolean("success")) {
+                            val response = data.getJSONObject("data")
+
+                            sharedPreferences.edit()
+                                .putString("user_id", response.getString("user_id")).apply()
+                            sharedPreferences.edit()
+                                .putString("user_name", response.getString("name")).apply()
+                            sharedPreferences.edit()
+                                .putString(
+                                    "user_mobile_number",
+                                    response.getString("mobile_number")
+                                )
+                                .apply()
+                            sharedPreferences.edit()
+                                .putString("user_address", response.getString("address"))
+                                .apply()
+                            sharedPreferences.edit()
+                                .putString("user_email", response.getString("email")).apply()
+                            sessionManager.setLogin(true)
+
+                            progress.visibility = View.GONE
+
+                            val intent =
+                                Intent(this, HomeActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            rlRegister.visibility = View.VISIBLE
+                            progress.visibility = View.GONE
+                            val msg = data.getString("errorMessage")
+                            Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    } catch (e: JSONException) {
+                        rlRegister.visibility = View.VISIBLE
+                        progress.visibility = View.INVISIBLE
+                        e.printStackTrace()
+                    }
+
+                },
+                Response.ErrorListener {
+                    rlRegister.visibility = View.VISIBLE
+                    progress.visibility = View.GONE
+                    Toast.makeText(
+                        this,
+                        "Registration failed",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Content-type"] = "application/json"
+                headers["token"] = "9bf534118365f1"
+                return headers
+            }
+        }
+        queue.add(registerPostRequest)
     }
 
-    override fun onPause() {
-        super.onPause()
-        finish()
+    override fun onSupportNavigateUp(): Boolean {
+        Volley.newRequestQueue(this).cancelAll(this::class.java.simpleName)
+        onBackPressed()
+        return true
     }
-
 }

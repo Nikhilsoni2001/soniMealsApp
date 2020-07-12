@@ -2,10 +2,12 @@ package com.nikhil.sonimeals.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -17,50 +19,53 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.fragment.*
+import com.nikhil.sonimeals.util.DrawerLocker
+import com.nikhil.sonimeals.util.SessionManager
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), DrawerLocker {
 
-    lateinit var drawerLayout: DrawerLayout
-    lateinit var coordinatorLayout: CoordinatorLayout
+    override fun setDrawerEnabled(enabled: Boolean) {
+        val lockMode = if (enabled)
+            DrawerLayout.LOCK_MODE_UNLOCKED
+        else
+            DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+
+        drawerLayout.setDrawerLockMode(lockMode)
+        actionBarDrawerToggle.isDrawerIndicatorEnabled = enabled
+    }
+
     lateinit var toolbar: Toolbar
-    lateinit var frame: FrameLayout
+    lateinit var drawerLayout: DrawerLayout
     lateinit var navigationView: NavigationView
-    lateinit var drawerHeader: TextView
-
     var previousItem: MenuItem? = null
+    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    lateinit var frame: FrameLayout
+    lateinit var drawerHeader: TextView
+    private lateinit var sessionManager: SessionManager
+    private lateinit var sharedPrefs: SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val sharedPreferences =
-            getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE)
+        sessionManager = SessionManager(this@HomeActivity)
+        sharedPrefs = this@HomeActivity.getSharedPreferences(
+            sessionManager.PREF_NAME,
+            sessionManager.PRIVATE_MODE
+        )
 
         //Initializations
         init()
 
-        drawerHeader.setText("${sharedPreferences.getString("username", "Username")}")
 
         //adding toolbar
         setUpToolbar()
 
+        setupActionBarToggle()
+
         displayHome()
 
-        /*The closing of navigation drawer is delayed to make the transition smooth
-            * We delay it by 0.1 second*/
-        val mPendingRunnable = Runnable { drawerLayout.closeDrawer(GravityCompat.START) }
-        Handler().postDelayed(mPendingRunnable, 100)
-
-        //making hamburger icon
-        val actionBarDrawerToggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolbar,
-            R.string.open_drawer,
-            R.string.close_drawer
-        )
-        drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
 
         //making nav items clickable
         navigationView.setNavigationItemSelectedListener {
@@ -72,6 +77,11 @@ class HomeActivity : AppCompatActivity() {
             it.isCheckable = true
             it.isChecked = true
             previousItem = it
+
+            /*The closing of navigation drawer is delayed to make the transition smooth
+           * We delay it by 0.1 second*/
+            val mPendingRunnable = Runnable { drawerLayout.closeDrawer(GravityCompat.START) }
+            Handler().postDelayed(mPendingRunnable, 100)
 
             when (it.itemId) {
                 R.id.home -> displayHome()
@@ -100,6 +110,26 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun setupActionBarToggle() {
+        actionBarDrawerToggle = object :
+            ActionBarDrawerToggle(this, drawerLayout, R.string.open_drawer, R.string.close_drawer) {
+            override fun onDrawerStateChanged(newState: Int) {
+                super.onDrawerStateChanged(newState)
+                /*The closing of navigation drawer is delayed to make the transition smooth
+            * We delay it by 0.1 second*/
+                val pendingRunnable = Runnable {
+                    val inputMethodManager =
+                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                }
+/*delaying the closing of the navigation drawer for that the motion looks smooth*/
+                Handler().postDelayed(pendingRunnable, 50)
+            }
+        }
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
     }
 
     private fun displayHome() {
@@ -154,6 +184,7 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.title = "Toolbar Title"
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setTitleTextAppearance(this, R.style.PoppinsTextAppearance)
     }
 
     //making hamburger icon Functional
@@ -179,11 +210,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun init() {
-        drawerLayout = findViewById(R.id.drawerLayout)
-        coordinatorLayout = findViewById(R.id.coordinatorLayout)
         toolbar = findViewById(R.id.toolbar)
-        frame = findViewById(R.id.frame)
+        drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
+        frame = findViewById(R.id.frame)
         val headerView = navigationView.getHeaderView(0)
         drawerHeader = headerView.findViewById(R.id.tvName)
     }
