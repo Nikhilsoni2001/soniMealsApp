@@ -74,4 +74,9 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="name_of_item">Name of Item</string>
     <string name="add">Add</string>
+    <string name="order_history_static_text">Your previous orders are listed below :</string>
+    <string name="no_orders">You haven\'t placed any order yet.</string>
+    <string name="Dummy_Date">08/07/2020</string>
+    <string name="Restaurant_Name">Name of Restaurant</string>
+    <string name="go_to_cart">Proceed To Cart</string>
 </resources>

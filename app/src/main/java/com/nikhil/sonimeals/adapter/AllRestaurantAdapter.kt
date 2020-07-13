@@ -4,18 +4,22 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.activity.MenuActivity
 import com.nikhil.sonimeals.database.RestaurantDatabase
 import com.nikhil.sonimeals.database.RestaurantEntity
+import com.nikhil.sonimeals.fragment.RestaurantFragment
 import com.nikhil.sonimeals.model.Restaurants
 import com.squareup.picasso.Picasso
 
@@ -46,10 +50,22 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
         Picasso.get().load(resObject.imageUrl).error(R.drawable.res_image).into(p0.resThumbnail)
 
         p0.cardRestaurant.setOnClickListener {
-            val intent = Intent(context, MenuActivity::class.java)
-            intent.putExtra("restaurant_id", resObject.id)
-            intent.putExtra("restaurant_name", resObject.name)
-            context.startActivity(intent)
+
+             val fragment = RestaurantFragment()
+            val args = Bundle()
+            args.putInt("id",  resObject.id)
+            args.putString("name", resObject.name)
+            fragment.arguments = args
+
+            val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.frame, fragment)
+            transaction.commit()
+            (context as AppCompatActivity).supportActionBar?.title = p0.restaurantName.text.toString()
+
+//            val intent = Intent(context, MenuActivity::class.java)
+//            intent.putExtra("restaurant_id", resObject.id)
+//            intent.putExtra("restaurant_name", resObject.name)
+//            context.startActivity(intent)
         }
 
         val listOfFavourites = GetAllFavAsyncTask(context).execute().get()
@@ -92,7 +108,7 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
         val resThumbnail = view.findViewById(R.id.imgRestaurantThumbnail) as ImageView
         val restaurantName = view.findViewById(R.id.txtRestaurantName) as TextView
         val rating = view.findViewById(R.id.txtRestaurantRating) as TextView
-        val cost = view.findViewById(R.id.txtCost) as TextView
+        val cost = view.findViewById(R.id.txtItemCost) as TextView
         val cardRestaurant = view.findViewById(R.id.cardRestaurant) as CardView
         val favImage = view.findViewById(R.id.imgIsFav) as ImageView
     }

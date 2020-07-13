@@ -4,21 +4,29 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.core.content.ContextCompat
+import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nikhil.sonimeals.R
-import com.nikhil.sonimeals.activity.MenuActivity
-import com.nikhil.sonimeals.model.MenuItem
+import com.nikhil.sonimeals.model.FoodItem
 
-class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
+class MenuAdapter(
+    val context: Context,
+    val menuList: ArrayList<FoodItem>,
+    private val listener: OnItemClickListener
+) :
     RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
 
+    companion object {
+        var isCartEmpty = true
+    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val txtName: TextView = view.findViewById(R.id.txtName)
-        val txtPrice: TextView = view.findViewById(R.id.txtCost)
-        val btnAdd: TextView = view.findViewById(R.id.btnAdd)
+        val foodItemName: TextView = view.findViewById(R.id.txtItemName)
+        val foodItemCost: TextView = view.findViewById(R.id.txtItemCost)
+        val sno: TextView = view.findViewById(R.id.txtSNo)
+        val addToCart: Button = view.findViewById(R.id.btnAddToCart)
+        val removeFromCart: Button = view.findViewById(R.id.btnRemoveFromCart)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuAdapter.ViewHolder {
@@ -28,35 +36,34 @@ class MenuAdapter(val context: Context, val itemList: ArrayList<MenuItem>) :
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return menuList.size
+    }
+
+    interface OnItemClickListener {
+        fun onAddItemClick(foodItem: FoodItem)
+        fun onRemoveItemClick(foodItem: FoodItem)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = itemList[position]
-        holder.txtName.text = item.name
-        holder.txtPrice.text = "Rs.${item.cost_for_one}"
-
-
-        holder.btnAdd.text = "Add"
-        val fav = ContextCompat.getColor(context, R.color.addFav)
-        holder.btnAdd.setBackgroundColor(fav)
-
-
-        holder.btnAdd.setOnClickListener {
-            if (holder.btnAdd.text == "Add") {
-                holder.btnAdd.text = "Remove"
-                val noFav = ContextCompat.getColor(context, R.color.removeFav)
-                holder.btnAdd.setBackgroundColor(noFav)
-                MenuActivity().onAddItemClick(item)
-            } else if(holder.btnAdd.text == "Remove") {
-                holder.btnAdd.text = "Add"
-                val fav = ContextCompat.getColor(context, R.color.addFav)
-                holder.btnAdd.setBackgroundColor(fav)
-                MenuActivity().onRemoveItemClick(item)
-            }
-
+        val menuObject = menuList[position]
+        holder.foodItemName.text = menuObject.itemName
+        val cost = "Rs. ${menuObject.cost?.toString()}"
+        holder.foodItemCost.text = cost
+        holder.sno.text = (position + 1).toString()
+        holder.addToCart.setOnClickListener {
+            holder.addToCart.visibility = View.GONE
+            holder.removeFromCart.visibility = View.VISIBLE
+            listener.onAddItemClick(menuObject)
         }
 
+        holder.removeFromCart.setOnClickListener {
+            holder.removeFromCart.visibility = View.GONE
+            holder.addToCart.visibility = View.VISIBLE
+            listener.onRemoveItemClick(menuObject)
+        }
+    }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 }

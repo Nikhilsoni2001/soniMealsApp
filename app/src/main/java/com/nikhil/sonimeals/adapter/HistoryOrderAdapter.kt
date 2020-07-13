@@ -5,20 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.model.FoodItem
-import com.nikhil.sonimeals.model.Order
-import java.util.ArrayList
+import com.nikhil.sonimeals.model.OrderDetails
+import java.text.SimpleDateFormat
+import java.util.*
 
-class HistoryOrderAdapter(val context: Context, private val order: ArrayList<Order>) :
+class HistoryOrderAdapter(val context: Context, private val orderHistoryList: ArrayList<OrderDetails>) :
     RecyclerView.Adapter<HistoryOrderAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val resName: TextView = view.findViewById(R.id.resName)
         val date: TextView = view.findViewById(R.id.txtDate)
         val recyclerHistory: RecyclerView = view.findViewById(R.id.recyclerOrderList)
-        val txtCost: TextView = view.findViewById(R.id.txtCost)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,29 +29,40 @@ class HistoryOrderAdapter(val context: Context, private val order: ArrayList<Ord
     }
 
     override fun getItemCount(): Int {
-        return order.size
+        return orderHistoryList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = order[position]
-        holder.resName.text = item.orderResName
-        holder.date.text = item.orderDate
-        holder.txtCost.text = item.orderCost
+        val orderHistoryobject = orderHistoryList[position]
+        holder.resName.text = orderHistoryobject.resName
+        holder.date.text = formatDate(orderHistoryobject.orderDate)
+        setUpRecycler(holder.recyclerHistory, orderHistoryobject)
+    }
 
-        val orderArray = item.orderArray
-        val orderList = ArrayList<FoodItem>()
-
-        for (i in 0 until orderArray.length()) {
-            val orderListObject = orderArray.getJSONObject(i)
-            orderList.add(
+    fun setUpRecycler(recyclerResHistory: RecyclerView, orderHistoryList: OrderDetails) {
+        val foodItemsList = ArrayList<FoodItem>()
+        for (i in 0 until orderHistoryList.foodItem.length()) {
+            val foodJson = orderHistoryList.foodItem.getJSONObject(i)
+            foodItemsList.add(
                 FoodItem(
-                    orderListObject.getString("food_item_id"),
-                    orderListObject.getString("name"),
-                    orderListObject.getString("cost")
+                    foodJson.getString("food_item_id"),
+                    foodJson.getString("name"),
+                    foodJson.getString("cost").toInt()
                 )
             )
         }
-        holder.recyclerHistory.adapter = HistoryListAdapter(context, orderList)
-        holder.recyclerHistory.layoutManager = LinearLayoutManager(context)
+        val historyListAdapter = CartAdapter(context, foodItemsList)
+        val mLayoutManager = LinearLayoutManager(context)
+        recyclerResHistory.layoutManager = mLayoutManager
+        recyclerResHistory.itemAnimator = DefaultItemAnimator()
+        recyclerResHistory.adapter = historyListAdapter
+    }
+
+    private fun formatDate(dateString: String): String? {
+        val inputFormatter = SimpleDateFormat("dd-MM-yy HH:mm:ss", Locale.ENGLISH)
+        val date: Date = inputFormatter.parse(dateString) as Date
+
+        val outputFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        return outputFormatter.format(date)
     }
 }

@@ -22,7 +22,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/txtCost"
+        android:id="@+id/txtItemCost"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"

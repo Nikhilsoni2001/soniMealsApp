@@ -9,13 +9,14 @@ import android.os.Handler
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.android.volley.toolbox.Volley
 import com.google.android.material.navigation.NavigationView
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.fragment.*
@@ -40,7 +41,9 @@ class HomeActivity : AppCompatActivity(), DrawerLocker {
     var previousItem: MenuItem? = null
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     lateinit var frame: FrameLayout
-    lateinit var drawerHeader: TextView
+    lateinit var headerName: TextView
+    lateinit var headerMobile: TextView
+    lateinit var headerImg: ImageView
     private lateinit var sessionManager: SessionManager
     private lateinit var sharedPrefs: SharedPreferences
 
@@ -95,8 +98,10 @@ class HomeActivity : AppCompatActivity(), DrawerLocker {
                     builder.setTitle("Confirmation")
                         .setMessage("Are you sure you want exit?")
                         .setPositiveButton("Yes") { _, _ ->
-//                            ActivityCompat.finishAffinity(this)
+                            sessionManager.setLogin(false)
+                            sharedPrefs.edit().clear().apply()
                             val intent = Intent(this, LoginActivity::class.java)
+                            Volley.newRequestQueue(this).cancelAll(this::class.java.simpleName)
                             startActivity(intent)
                         }
                         .setNegativeButton("No") { _, _ ->
@@ -109,12 +114,26 @@ class HomeActivity : AppCompatActivity(), DrawerLocker {
             return@setNavigationItemSelectedListener true
         }
 
+        headerName.text = sharedPrefs.getString("user_name", null)
+        val mobile = "+91-${sharedPrefs.getString("user_mobile_number", null)}"
+        headerMobile.text = mobile
 
+        headerName.setOnClickListener {
+            displayProfile()
+            val mPendingRunnable = Runnable { drawerLayout.closeDrawer(GravityCompat.START) }
+            Handler().postDelayed(mPendingRunnable, 50)
+        }
+
+        headerImg.setOnClickListener {
+            displayProfile()
+            val mPendingRunnable = Runnable { drawerLayout.closeDrawer(GravityCompat.START) }
+            Handler().postDelayed(mPendingRunnable, 50)
+        }
     }
 
     private fun setupActionBarToggle() {
         actionBarDrawerToggle = object :
-            ActionBarDrawerToggle(this, drawerLayout, R.string.open_drawer, R.string.close_drawer) {
+            ActionBarDrawerToggle(this@HomeActivity, drawerLayout, R.string.open_drawer, R.string.close_drawer) {
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)
                 /*The closing of navigation drawer is delayed to make the transition smooth
@@ -147,7 +166,7 @@ class HomeActivity : AppCompatActivity(), DrawerLocker {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frame, fragment)
         transaction.commit()
-        supportActionBar?.title = "Profile"
+        supportActionBar?.title = "My Profile"
         drawerLayout.closeDrawers()
     }
 
@@ -215,7 +234,9 @@ class HomeActivity : AppCompatActivity(), DrawerLocker {
         navigationView = findViewById(R.id.navigationView)
         frame = findViewById(R.id.frame)
         val headerView = navigationView.getHeaderView(0)
-        drawerHeader = headerView.findViewById(R.id.tvName)
+        headerName = headerView.findViewById(R.id.tvName)
+        headerMobile = headerView.findViewById(R.id.tvMobile)
+        headerImg = headerView.findViewById(R.id.imgProfile)
     }
 
 }

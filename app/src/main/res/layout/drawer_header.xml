@@ -7,22 +7,39 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
+        android:id="@+id/imgProfile"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:layout_marginTop="15dp"
-        android:padding="10dp"
+        android:layout_marginTop="12dp"
         android:contentDescription="@string/todo"
+        android:padding="10dp"
         android:src="@drawable/profile" />
 
     <TextView
         android:id="@+id/tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:padding="10dp"
-        android:text="Welcome"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppins"
+        android:padding="5dp"
+        android:text="Nikhil"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvMobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/poppins"
+        android:padding="5dp"
+        android:text="8699333207"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
 
 </LinearLayout>
