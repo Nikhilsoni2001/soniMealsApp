@@ -11,8 +11,8 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.internshala.higherorderfunctionalitiessolution.util.ConnectionManager
-import com.internshala.higherorderfunctionalitiessolution.util.REGISTER
+import com.nikhil.sonimeals.util.ConnectionManager
+import com.nikhil.sonimeals.util.REGISTER
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.util.SessionManager
 import com.nikhil.sonimeals.util.Validations

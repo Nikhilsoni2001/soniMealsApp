@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.appcompat.view.menu.MenuAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,10 +21,11 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
-import com.internshala.higherorderfunctionalitiessolution.util.ConnectionManager
-import com.internshala.higherorderfunctionalitiessolution.util.FETCH_RESTAURANTS
+import com.nikhil.sonimeals.util.ConnectionManager
+import com.nikhil.sonimeals.util.FETCH_RESTAURANTS
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.activity.CartActivity
+import com.nikhil.sonimeals.adapter.MenuAdapter
 import com.nikhil.sonimeals.database.OrderEntity
 import com.nikhil.sonimeals.database.RestaurantDatabase
 import com.nikhil.sonimeals.model.FoodItem
@@ -36,7 +36,7 @@ import java.util.HashMap
 class RestaurantFragment : Fragment() {
 
     private lateinit var recyclerMenu: RecyclerView
-    private lateinit var restaurantMenuAdapter: com.nikhil.sonimeals.adapter.MenuAdapter
+    private lateinit var restaurantMenuAdapter: MenuAdapter
     private var menuList = arrayListOf<FoodItem>()
     private lateinit var rlLoading: RelativeLayout
     private var orderList = arrayListOf<FoodItem>()
@@ -78,7 +78,7 @@ class RestaurantFragment : Fragment() {
             val queue = Volley.newRequestQueue(activity as Context)
 
             val restaurantRequest = object :
-                JsonObjectRequest(Request.Method.GET, FETCH_RESTAURANTS, null, Response.Listener {
+                JsonObjectRequest(Request.Method.GET, "$FETCH_RESTAURANTS/$resId", null, Response.Listener {
                     rlLoading.visibility = View.GONE
 
                     try {
@@ -92,18 +92,18 @@ class RestaurantFragment : Fragment() {
                                     menuObject.getString("id"),
                                     menuObject.getString("name"),
                                     menuObject.getString("cost_for_one").toInt()
-                                )
+                                    )
                                 menuList.add(foodItem)
-                                restaurantMenuAdapter = com.nikhil.sonimeals.adapter.MenuAdapter(
+                                restaurantMenuAdapter = MenuAdapter(
                                     activity as Context,
                                     menuList,
                                     object :
-                                        com.nikhil.sonimeals.adapter.MenuAdapter.OnItemClickListener {
+                                        MenuAdapter.OnItemClickListener {
                                         override fun onAddItemClick(foodItem: FoodItem) {
                                             orderList.add(foodItem)
                                             if (orderList.size > 0) {
                                                 goToCart.visibility = View.VISIBLE
-                                                com.nikhil.sonimeals.adapter.MenuAdapter.isCartEmpty =
+                                                MenuAdapter.isCartEmpty =
                                                     false
                                             }
                                         }
@@ -112,7 +112,7 @@ class RestaurantFragment : Fragment() {
                                             orderList.remove(foodItem)
                                             if (orderList.isEmpty()) {
                                                 goToCart.visibility = View.GONE
-                                                com.nikhil.sonimeals.adapter.MenuAdapter.isCartEmpty =
+                                                MenuAdapter.isCartEmpty =
                                                     true
                                             }
                                         }
@@ -143,7 +143,7 @@ class RestaurantFragment : Fragment() {
         }
     }
 
-    fun proceedToCart() {
+    private fun proceedToCart() {
         /*Here we see the implementation of Gson.
         * Whenever we want to convert the custom data types into simple data types
         * which can be transferred across for utility purposes, we will use Gson*/
@@ -183,8 +183,9 @@ class RestaurantFragment : Fragment() {
                     db.close()
                     return true
                 }
+
                 2 -> {
-                    db.orderDao().removeOrder(OrderEntity(restaurantId, foodItems))
+                    db.orderDao().deleteOrder(OrderEntity(restaurantId, foodItems))
                     db.close()
                     return true
                 }

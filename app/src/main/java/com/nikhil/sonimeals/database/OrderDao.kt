@@ -1,5 +1,4 @@
 package com.nikhil.sonimeals.database
-
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -12,7 +11,7 @@ interface OrderDao {
     fun insertOrder(orderEntity: OrderEntity)
 
     @Delete
-    fun removeOrder(orderEntity: OrderEntity)
+    fun deleteOrder(orderEntity: OrderEntity)
 
     @Query("SELECT * FROM orders")
     fun getAllOrders(): List<OrderEntity>

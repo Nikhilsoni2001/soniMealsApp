@@ -17,7 +17,7 @@ import java.util.*
 class HistoryOrderAdapter(val context: Context, private val orderHistoryList: ArrayList<OrderDetails>) :
     RecyclerView.Adapter<HistoryOrderAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val resName: TextView = view.findViewById(R.id.resName)
+        val resName: TextView = view.findViewById(R.id.txtCartResName)
         val date: TextView = view.findViewById(R.id.txtDate)
         val recyclerHistory: RecyclerView = view.findViewById(R.id.recyclerOrderList)
     }
@@ -39,7 +39,7 @@ class HistoryOrderAdapter(val context: Context, private val orderHistoryList: Ar
         setUpRecycler(holder.recyclerHistory, orderHistoryobject)
     }
 
-    fun setUpRecycler(recyclerResHistory: RecyclerView, orderHistoryList: OrderDetails) {
+    private fun setUpRecycler(recyclerResHistory: RecyclerView, orderHistoryList: OrderDetails) {
         val foodItemsList = ArrayList<FoodItem>()
         for (i in 0 until orderHistoryList.foodItem.length()) {
             val foodJson = orderHistoryList.foodItem.getJSONObject(i)
@@ -51,11 +51,11 @@ class HistoryOrderAdapter(val context: Context, private val orderHistoryList: Ar
                 )
             )
         }
-        val historyListAdapter = CartAdapter(context, foodItemsList)
+        val cartItemAdapter = CartAdapter(context, foodItemsList)
         val mLayoutManager = LinearLayoutManager(context)
         recyclerResHistory.layoutManager = mLayoutManager
         recyclerResHistory.itemAnimator = DefaultItemAnimator()
-        recyclerResHistory.adapter = historyListAdapter
+        recyclerResHistory.adapter = cartItemAdapter
     }
 
     private fun formatDate(dateString: String): String? {

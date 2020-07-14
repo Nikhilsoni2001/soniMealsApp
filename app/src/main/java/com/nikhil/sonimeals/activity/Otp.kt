@@ -12,8 +12,8 @@ import com.android.volley.Response
 import com.android.volley.VolleyLog
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.internshala.higherorderfunctionalitiessolution.util.ConnectionManager
-import com.internshala.higherorderfunctionalitiessolution.util.RESET_PASSWORD
+import com.nikhil.sonimeals.util.ConnectionManager
+import com.nikhil.sonimeals.util.RESET_PASSWORD
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.util.Validations
 import org.json.JSONException
@@ -21,17 +21,18 @@ import org.json.JSONObject
 
 class Otp : AppCompatActivity() {
 
-    lateinit var etOTP: EditText
-    lateinit var etNewPass: EditText
-    lateinit var etCnfrmPass: EditText
-    lateinit var btnSubmit: Button
-    lateinit var llOTP: LinearLayout
-    lateinit var progress: ProgressBar
-    lateinit var mobile: String
+    private lateinit var etOTP: EditText
+    private lateinit var etNewPass: EditText
+    private lateinit var etCnfrmPass: EditText
+    private lateinit var btnSubmit: Button
+    private lateinit var llOTP: LinearLayout
+    private lateinit var progress: ProgressBar
+    private lateinit var mobile: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_otp)
+
         etOTP = findViewById(R.id.etOTP)
         etNewPass = findViewById(R.id.etNewPass)
         etCnfrmPass = findViewById(R.id.etCnfrmPass)

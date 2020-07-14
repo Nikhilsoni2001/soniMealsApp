@@ -17,6 +17,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.nikhil.sonimeals.util.FETCH_PREVIOUS_ORDERS
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.adapter.HistoryOrderAdapter
 import com.nikhil.sonimeals.model.OrderDetails
@@ -61,7 +62,7 @@ class OrderHistoryFragment : Fragment() {
         val histRequest =
             object : JsonObjectRequest(
                 Request.Method.GET,
-                "FETCH_PREVIOUS_ORDERS$userId",
+                "$FETCH_PREVIOUS_ORDERS$userId",
                 null,
                 Response.Listener {
                     rlLoading.visibility = View.GONE

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="8">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="0.3"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:padding="6dp" />
+
+    <TextView
+        android:id="@+id/txtCartResName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="5.7"
+        android:fontFamily="@font/poppins"
+        android:padding="6dp"
+        android:text="Name Of Res"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtCartPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="2"
+        android:fontFamily="@font/poppins"
+        android:padding="6dp"
+        android:text="Rs.100"
+        android:textAllCaps="false"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black" />
+
+</LinearLayout>

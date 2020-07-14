@@ -8,29 +8,33 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.model.FoodItem
-import com.nikhil.sonimeals.model.OrderDetails
 
-class CartAdapter(val context: Context, val item: ArrayList<FoodItem>) :
+class CartAdapter(val context: Context, private val cartList: ArrayList<FoodItem>) :
     RecyclerView.Adapter<CartAdapter.ViewHolder>() {
 //
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-//        val resName: TextView = view.findViewById(R.id.resName)
-//        val txtCost: TextView = view.findViewById(R.id.txtCost)
+        val itemName: TextView = view.findViewById(R.id.txtCartResName)
+        val itemCost: TextView = view.findViewById(R.id.txtCartPrice)
     }
 //
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.recycler_cart, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.recycler_item_custom_row, parent, false)
         return ViewHolder(view)
     }
 //
     override fun getItemCount(): Int {
-        return item.size
+        return cartList.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        val item = item[position]
-//        holder.resName.text = item.name
-//        holder.txtCost.text = item.cost_for_one
+        val cartObject = cartList[position]
+        holder.itemName.text = cartObject.itemName
+        val cost = "Rs. ${cartObject.cost?.toString()}"
+        holder.itemCost.text = cost
     }
 }

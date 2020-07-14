@@ -1,7 +1,6 @@
 package com.nikhil.sonimeals.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +15,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.nikhil.sonimeals.R
-import com.nikhil.sonimeals.activity.MenuActivity
 import com.nikhil.sonimeals.database.RestaurantDatabase
 import com.nikhil.sonimeals.database.RestaurantEntity
 import com.nikhil.sonimeals.fragment.RestaurantFragment
@@ -50,17 +48,17 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
         Picasso.get().load(resObject.imageUrl).error(R.drawable.res_image).into(p0.resThumbnail)
 
         p0.cardRestaurant.setOnClickListener {
-
-             val fragment = RestaurantFragment()
+            val fragment = RestaurantFragment()
             val args = Bundle()
-            args.putInt("id",  resObject.id)
+            args.putInt("id", resObject.id)
             args.putString("name", resObject.name)
             fragment.arguments = args
-
-            val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
+            val transaction =
+                (context as FragmentActivity).supportFragmentManager.beginTransaction()
             transaction.replace(R.id.frame, fragment)
             transaction.commit()
-            (context as AppCompatActivity).supportActionBar?.title = p0.restaurantName.text.toString()
+            (context as AppCompatActivity).supportActionBar?.title =
+                p0.restaurantName.text.toString()
 
 //            val intent = Intent(context, MenuActivity::class.java)
 //            intent.putExtra("restaurant_id", resObject.id)
@@ -108,7 +106,7 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
         val resThumbnail = view.findViewById(R.id.imgRestaurantThumbnail) as ImageView
         val restaurantName = view.findViewById(R.id.txtRestaurantName) as TextView
         val rating = view.findViewById(R.id.txtRestaurantRating) as TextView
-        val cost = view.findViewById(R.id.txtItemCost) as TextView
+        val cost = view.findViewById(R.id.txtCartPrice) as TextView
         val cardRestaurant = view.findViewById(R.id.cardRestaurant) as CardView
         val favImage = view.findViewById(R.id.imgIsFav) as ImageView
     }
@@ -116,7 +114,7 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
     class DBAsyncTask(context: Context, val restaurantEntity: RestaurantEntity, val mode: Int) :
         AsyncTask<Void, Void, Boolean>() {
 
-        val db = Room.databaseBuilder(context, RestaurantDatabase::class.java, "res-db").build()
+        val db = Room.databaseBuilder(context, RestaurantDatabase::class.java, "res-db").fallbackToDestructiveMigration().build()
 
         override fun doInBackground(vararg params: Void?): Boolean {
 
@@ -178,4 +176,3 @@ class AllRestaurantAdapter(private var restaurants: ArrayList<Restaurants>, val 
         }
     }
 }
-

@@ -12,7 +12,7 @@ import com.nikhil.sonimeals.model.FoodItem
 
 class MenuAdapter(
     val context: Context,
-    val menuList: ArrayList<FoodItem>,
+    private val menuList: ArrayList<FoodItem>,
     private val listener: OnItemClickListener
 ) :
     RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
@@ -23,7 +23,7 @@ class MenuAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val foodItemName: TextView = view.findViewById(R.id.txtItemName)
-        val foodItemCost: TextView = view.findViewById(R.id.txtItemCost)
+        val foodItemCost: TextView = view.findViewById(R.id.txtCartPrice)
         val sno: TextView = view.findViewById(R.id.txtSNo)
         val addToCart: Button = view.findViewById(R.id.btnAddToCart)
         val removeFromCart: Button = view.findViewById(R.id.btnRemoveFromCart)
@@ -31,7 +31,7 @@ class MenuAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuAdapter.ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.recycler_menu, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.menu_custom_row, parent, false)
         return ViewHolder(view)
     }
 

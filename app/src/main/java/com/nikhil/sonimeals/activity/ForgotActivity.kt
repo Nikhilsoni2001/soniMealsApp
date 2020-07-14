@@ -11,8 +11,8 @@ import com.android.volley.Response
 import com.android.volley.VolleyLog
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.internshala.higherorderfunctionalitiessolution.util.ConnectionManager
-import com.internshala.higherorderfunctionalitiessolution.util.FORGOT_PASSWORD
+import com.nikhil.sonimeals.util.ConnectionManager
+import com.nikhil.sonimeals.util.FORGOT_PASSWORD
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.util.Validations
 import org.json.JSONException
@@ -38,7 +38,6 @@ class ForgotActivity : AppCompatActivity() {
         rlContentMain.visibility = View.VISIBLE
         progress.visibility = View.INVISIBLE
 
-        title = "Forgot"
 
         btnForgotNext.setOnClickListener {
 

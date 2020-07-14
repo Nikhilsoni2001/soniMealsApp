@@ -29,11 +29,11 @@ class ProfileFragment : Fragment() {
         val txtProfileEmailAddress: TextView = view.findViewById(R.id.tvEmail)
         val txtProfileAddress: TextView = view.findViewById(R.id.tvAddress)
 //
-        txtProfileName.text = sharedPrefs?.getString("user_name", "Name")
+        txtProfileName.text = sharedPrefs.getString("user_name", "Name")
         val mobile = "+91-${sharedPrefs.getString("user_mobile_number", null)}"
         txtProfileMobileNumber.text = mobile
-        txtProfileEmailAddress.text = sharedPrefs?.getString("user_email", "Email")
-        txtProfileAddress.text = sharedPrefs?.getString("user_address", "Address")
+        txtProfileEmailAddress.text = sharedPrefs.getString("user_email", "Email")
+        txtProfileAddress.text = sharedPrefs.getString("user_address", "Address")
         return view
     }
 

@@ -1,4 +1,4 @@
-package com.internshala.higherorderfunctionalitiessolution.util
+package com.nikhil.sonimeals.util
 
 const val NETWORK_IP = "http://13.235.250.119/v2/"
 const val REGISTER = "$NETWORK_IP/register/fetch_result"

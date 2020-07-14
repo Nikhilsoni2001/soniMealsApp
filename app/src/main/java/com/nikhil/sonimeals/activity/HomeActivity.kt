@@ -14,12 +14,15 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.android.volley.toolbox.Volley
 import com.google.android.material.navigation.NavigationView
 import com.nikhil.sonimeals.R
+import com.nikhil.sonimeals.adapter.MenuAdapter
 import com.nikhil.sonimeals.fragment.*
+import com.nikhil.sonimeals.fragment.RestaurantFragment.Companion.resId
 import com.nikhil.sonimeals.util.DrawerLocker
 import com.nikhil.sonimeals.util.SessionManager
 
@@ -35,17 +38,16 @@ class HomeActivity : AppCompatActivity(), DrawerLocker {
         actionBarDrawerToggle.isDrawerIndicatorEnabled = enabled
     }
 
-    lateinit var toolbar: Toolbar
+    private lateinit var toolbar: Toolbar
     lateinit var drawerLayout: DrawerLayout
-    lateinit var navigationView: NavigationView
-    var previousItem: MenuItem? = null
+    private lateinit var navigationView: NavigationView
+    private var previousItem: MenuItem? = null
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
-    lateinit var frame: FrameLayout
-    lateinit var headerName: TextView
-    lateinit var headerMobile: TextView
-    lateinit var headerImg: ImageView
     private lateinit var sessionManager: SessionManager
     private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var headerName: TextView
+    private lateinit var headerMobile: TextView
+    private lateinit var headerImg: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,6 +104,7 @@ class HomeActivity : AppCompatActivity(), DrawerLocker {
                             sharedPrefs.edit().clear().apply()
                             val intent = Intent(this, LoginActivity::class.java)
                             Volley.newRequestQueue(this).cancelAll(this::class.java.simpleName)
+                            ActivityCompat.finishAffinity(this)
                             startActivity(intent)
                         }
                         .setNegativeButton("No") { _, _ ->
@@ -133,7 +136,12 @@ class HomeActivity : AppCompatActivity(), DrawerLocker {
 
     private fun setupActionBarToggle() {
         actionBarDrawerToggle = object :
-            ActionBarDrawerToggle(this@HomeActivity, drawerLayout, R.string.open_drawer, R.string.close_drawer) {
+            ActionBarDrawerToggle(
+                this@HomeActivity,
+                drawerLayout,
+                R.string.open_drawer,
+                R.string.close_drawer
+            ) {
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)
                 /*The closing of navigation drawer is delayed to make the transition smooth
@@ -206,33 +214,61 @@ class HomeActivity : AppCompatActivity(), DrawerLocker {
         toolbar.setTitleTextAppearance(this, R.style.PoppinsTextAppearance)
     }
 
-    //making hamburger icon Functional
+
+    /*Setting up the opening of navigation drawer*/
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         val id = item.itemId
-
-        if (id == android.R.id.home) {
-            drawerLayout.openDrawer(GravityCompat.START)
+        val f = supportFragmentManager.findFragmentById(R.id.frame)
+        when (id) {
+            android.R.id.home -> {
+                if (f is RestaurantFragment) {
+                    onBackPressed()
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START)
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
+    /*Adding custom routes from different fragments when we press the back button*/
     override fun onBackPressed() {
-        val frag = supportFragmentManager.findFragmentById(R.id.frame)
-        navigationView.checkedItem?.isChecked = false
+        val f = supportFragmentManager.findFragmentById(R.id.frame)
+        when (f) {
+            is HomeFragment -> {
+                Volley.newRequestQueue(this).cancelAll(this::class.java.simpleName)
+                super.onBackPressed()
+            }
+            is RestaurantFragment -> {
+                if (!MenuAdapter.isCartEmpty) {
+                    val builder = AlertDialog.Builder(this@HomeActivity)
+                    builder.setTitle("Confirmation")
+                        .setMessage("Going back will reset cart items. Do you still want to proceed?")
+                        .setPositiveButton("Yes") { _, _ ->
+                            val clearCart =
+                                CartActivity.ClearDBAsync(applicationContext, resId.toString())
+                                    .execute().get()
+                            displayHome()
+                            MenuAdapter.isCartEmpty = true
+                        }
+                        .setNegativeButton("No") { _, _ ->
 
-        when (frag) {
-            !is HomeFragment -> displayHome()
-
-            else -> super.onBackPressed()
+                        }
+                        .create()
+                        .show()
+                } else {
+                    displayHome()
+                }
+            }
+            else -> displayHome()
         }
     }
 
-    fun init() {
+
+    private fun init() {
         toolbar = findViewById(R.id.toolbar)
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
-        frame = findViewById(R.id.frame)
         val headerView = navigationView.getHeaderView(0)
         headerName = headerView.findViewById(R.id.tvName)
         headerMobile = headerView.findViewById(R.id.tvMobile)

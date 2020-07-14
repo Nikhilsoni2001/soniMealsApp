@@ -79,4 +79,6 @@
     <string name="Dummy_Date">08/07/2020</string>
     <string name="Restaurant_Name">Name of Restaurant</string>
     <string name="go_to_cart">Proceed To Cart</string>
+    <string name="place_order">Place Order</string>
+    <string name="order_placed">Your Order has been placed successfully!!</string>
 </resources>
