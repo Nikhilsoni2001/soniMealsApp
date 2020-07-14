@@ -1,6 +1,6 @@
 package com.nikhil.sonimeals.util
 
-const val NETWORK_IP = "http://13.235.250.119/v2/"
+const val NETWORK_IP = "http://13.235.250.119/v2"
 const val REGISTER = "$NETWORK_IP/register/fetch_result"
 const val LOGIN = "$NETWORK_IP/login/fetch_result"
 const val FORGOT_PASSWORD = "$NETWORK_IP/forgot_password/fetch_result"

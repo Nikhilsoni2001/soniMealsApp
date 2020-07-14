@@ -3,6 +3,7 @@ package com.nikhil.sonimeals.activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -43,6 +44,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var txtResName: TextView
     private lateinit var rlLoading: RelativeLayout
     private lateinit var rlCart: RelativeLayout
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var btnPlaceOrder: Button
     private var resId: Int = 0
     private var resName: String = ""
@@ -125,13 +127,15 @@ class CartActivity : AppCompatActivity() {
     private fun sendServerRequest() {
         val queue = Volley.newRequestQueue(this)
 
+        sharedPreferences = this@CartActivity.getSharedPreferences("FoodApp", Context.MODE_PRIVATE)
+
+        val userId = sharedPreferences.getInt("user_id", 0)
+
         /*Creating the json object required for placing the order*/
         val jsonParams = JSONObject()
         jsonParams.put(
-            "user_id",
-            this@CartActivity.getSharedPreferences("FoodApp", Context.MODE_PRIVATE)
-                .getString("user_id", null) as String
-        )
+            "user_id", userId.toString())
+
         jsonParams.put("restaurant_id", RestaurantFragment.resId?.toString() as String)
         var sum = 0
         for (i in 0 until orderList.size) {

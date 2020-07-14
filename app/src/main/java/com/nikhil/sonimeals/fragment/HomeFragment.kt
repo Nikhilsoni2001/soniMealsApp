@@ -24,8 +24,11 @@ import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.adapter.AllRestaurantAdapter
 import com.nikhil.sonimeals.model.Restaurants
 import com.nikhil.sonimeals.util.DrawerLocker
+import com.nikhil.sonimeals.util.Sorter
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.HashMap
 
 class HomeFragment : Fragment() {
 
@@ -34,6 +37,7 @@ class HomeFragment : Fragment() {
     private var restaurantList = arrayListOf<Restaurants>()
     private lateinit var progressBar: ProgressBar
     private lateinit var rlLoading: RelativeLayout
+    private var checkedItem: Int = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,7 +94,7 @@ class HomeFragment : Fragment() {
                                 restaurantList.add(restaurant)
                                 if (activity != null) {
                                     allRestaurantsAdapter =
-                                        AllRestaurantAdapter(restaurantList ,activity as Context)
+                                        AllRestaurantAdapter(restaurantList, activity as Context)
                                     val mLayoutManager = LinearLayoutManager(activity)
                                     recyclerRestaurant.layoutManager = mLayoutManager
                                     recyclerRestaurant.itemAnimator = DefaultItemAnimator()
@@ -104,8 +108,8 @@ class HomeFragment : Fragment() {
                         e.printStackTrace()
                     }
                 },
-                Response.ErrorListener { error: VolleyError? ->
-                    Toast.makeText(activity as Context, error?.message, Toast.LENGTH_SHORT).show()
+                Response.ErrorListener { error: VolleyError ->
+                    Toast.makeText(activity as Context, error.message, Toast.LENGTH_SHORT).show()
                 }) {
 
                 /*Send the headers using the below method*/
@@ -130,6 +134,47 @@ class HomeFragment : Fragment() {
             builder.show()
         }
 
+    }
+
+    //    Inflating sort icon
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        activity?.menuInflater?.inflate(R.menu.menu_home, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.action_sort -> showDialog(context as Context)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showDialog(context: Context) {
+        val builder: AlertDialog.Builder? = AlertDialog.Builder(context)
+        builder?.setTitle("Sort By?")
+        builder?.setSingleChoiceItems(R.array.filters, checkedItem) { _, isChecked ->
+            checkedItem = isChecked
+        }
+        builder?.setPositiveButton("Ok") { _, _ ->
+            when (checkedItem) {
+                0 -> {
+                    Collections.sort(restaurantList, Sorter.costComparator)
+                }
+                1 -> {
+                    Collections.sort(restaurantList, Sorter.costComparator)
+                    restaurantList.reverse()
+                }
+                2 -> {
+                    Collections.sort(restaurantList, Sorter.ratingCompartor)
+                    restaurantList.reverse()
+                }
+            }
+            allRestaurantsAdapter.notifyDataSetChanged()
+        }
+        builder?.setNegativeButton("Cancel") {_, _ ->
+
+        }
+        builder?.create()
+        builder?.show()
     }
 
 }

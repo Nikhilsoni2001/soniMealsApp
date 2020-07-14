@@ -33,7 +33,7 @@ class OrderHistoryFragment : Fragment() {
     private lateinit var rlNoOrders: RelativeLayout
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var rlLoading: RelativeLayout
-    private var userId = ""
+    private var userId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +51,9 @@ class OrderHistoryFragment : Fragment() {
         rlLoading.visibility = View.VISIBLE
         sharedPreferences =
             (activity as Context).getSharedPreferences("FoodApp", Context.MODE_PRIVATE)
-        userId = sharedPreferences.getString("user_id", null) as String
+        userId = sharedPreferences.getInt("user_id", 0)
 
-        sendServerRequest(userId)
+        sendServerRequest(userId.toString())
         return view
     }
 

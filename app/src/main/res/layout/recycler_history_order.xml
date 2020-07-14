@@ -16,11 +16,12 @@
             android:id="@+id/txtCartResName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3.5"
+            android:layout_weight="3.2"
             android:fontFamily="@font/poppins"
             android:padding="5dp"
             android:text="@string/Restaurant_Name"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -28,7 +29,7 @@
             android:id="@+id/txtDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.5"
+            android:layout_weight="1.8"
             android:fontFamily="@font/poppins"
             android:text="@string/Dummy_Date"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -36,10 +37,20 @@
             android:textSize="18sp" />
     </LinearLayout>
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerOrderList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/llStaticOrderHistory"
         android:padding="5dp" />
+
+    <View
+        android:layout_below="@id/recyclerOrderList"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginHorizontal="25dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
 </RelativeLayout>

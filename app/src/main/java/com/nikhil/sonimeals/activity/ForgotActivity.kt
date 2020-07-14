@@ -3,6 +3,7 @@ package com.nikhil.sonimeals.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -87,6 +88,10 @@ class ForgotActivity : AppCompatActivity() {
                     val data = it.getJSONObject("data")
                     if (data.getBoolean("success")) {
                         val firstTry = data.getBoolean("first_try")
+                        val intent = Intent(this@ForgotActivity, Otp::class.java)
+                        intent.putExtra("user_mobile", mobileNumber)
+                        startActivity(intent)
+
                         if (firstTry) {
                             val builder = AlertDialog.Builder(this@ForgotActivity)
                             builder.setTitle("Information")
@@ -102,10 +107,14 @@ class ForgotActivity : AppCompatActivity() {
                             }
                             builder.create().show()
                         } else {
+
+//                            val intent = Intent(this, Otp::class.java)
+////                            intent.putExtra("user_mobile", mobileNumber)
+//                            startActivity(intent)
                             val builder = AlertDialog.Builder(this@ForgotActivity)
                             builder.setTitle("Information")
                             builder.setMessage("Please refer to the previous email for the OTP.")
-                            builder.setCancelable(false)
+
                             builder.setPositiveButton("Ok") { _, _ ->
                                 val intent = Intent(
                                     this@ForgotActivity,
@@ -114,6 +123,10 @@ class ForgotActivity : AppCompatActivity() {
                                 intent.putExtra("user_mobile", mobileNumber)
                                 startActivity(intent)
                             }
+                            val alertDialog: AlertDialog = builder.create()
+                            alertDialog.setCancelable(false)
+                            alertDialog.show()
+
                             builder.create().show()
                         }
                     } else {
@@ -126,6 +139,7 @@ class ForgotActivity : AppCompatActivity() {
                         ).show()
                     }
                 } catch (e: JSONException) {
+                    Log.d("Error ->", "$e")
                     e.printStackTrace()
                     rlContentMain.visibility = View.VISIBLE
                     progress.visibility = View.GONE

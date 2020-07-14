@@ -44,7 +44,7 @@ class Otp : AppCompatActivity() {
         progress.visibility = View.GONE
 
         if (intent != null) {
-            mobile = intent.getStringExtra("mobile_number") as String
+            mobile = intent.getStringExtra("user_mobile")
         }
         btnSubmit.setOnClickListener {
             llOTP.visibility = View.GONE
