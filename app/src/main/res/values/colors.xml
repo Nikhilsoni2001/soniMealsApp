@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff555d</color>
-    <color name="colorPrimaryDark">#a31545</color>
+    <color name="colorPrimary">#ef6c00</color>
+    <color name="colorPrimaryDark">#f5f5f5</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="removeFav">#d50000</color>
-    <color name="addFav">#283593</color>
+    <color name="removeFav">#bdbdbd</color>
+    <color name="addFav">#ef6c00</color>
+    <color name="tv_back">#e0e0e0</color>
 </resources>

@@ -8,18 +8,18 @@
         android:id="@+id/llOTP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@android:color/white"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="80dp"
             android:fontFamily="@font/poppins"
             android:gravity="center"
             android:text="@string/enter_otp_and_new_password"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="20sp" />
 
         <EditText
@@ -28,8 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
-            android:background="@android:color/white"
-            android:fontFamily="@font/poppins"
+            android:background="@color/tv_back"
+            android:fontFamily="@font/roboto"
             android:hint="@string/otp"
             android:inputType="number"
             android:maxLength="4"
@@ -42,8 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
-            android:background="@android:color/white"
-            android:fontFamily="@font/poppins"
+            android:background="@color/tv_back"
+            android:fontFamily="@font/roboto"
             android:hint="@string/new_password"
             android:inputType="textPassword"
             android:maxLines="1"
@@ -55,8 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
-            android:background="@android:color/white"
-            android:fontFamily="@font/poppins"
+            android:background="@color/tv_back"
+            android:fontFamily="@font/roboto"
             android:hint="@string/confirm_password"
             android:inputType="textPassword"
             android:maxLines="1"
@@ -68,11 +68,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="30dp"
-            android:background="#1a237e"
+            android:background="@color/colorPrimary"
             android:fontFamily="@font/poppins"
-            android:text="Submit"
+            android:text="@string/submit"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <ProgressBar
             android:id="@+id/progressBar"

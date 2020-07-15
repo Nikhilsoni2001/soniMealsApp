@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@android:color/white"
     android:orientation="vertical"
     tools:context=".activity.LoginActivity">
 
@@ -12,22 +12,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imgMainLogo"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+        <TextView
+            android:id="@+id/tvMainLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
-            android:src="@mipmap/ic_logo" />
+            android:layout_marginTop="52dp"
+            android:fontFamily="@font/poppins"
+            android:text="Soni Meals"
+            android:textColor="@android:color/black"
+            android:textSize="45sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/tvMainLogo"
+            android:layout_marginHorizontal="75dp"
+            android:background="@android:color/black" />
+
+        <TextView
+            android:id="@+id/head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view1"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/poppins"
+            android:text="@string/enter_your_credentials_below"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/etMobile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/imgMainLogo"
+            android:layout_below="@id/head"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="25dp"
-            android:background="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:background="@color/tv_back"
+            android:fontFamily="@font/roboto"
             android:hint="@string/mobile_number_10_digits"
             android:inputType="phone"
             android:maxLength="10"
@@ -42,7 +67,8 @@
             android:layout_below="@id/etMobile"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="15dp"
-            android:background="@android:color/white"
+            android:background="@color/tv_back"
+            android:fontFamily="@font/roboto"
             android:hint="@string/password"
             android:inputType="textPassword"
             android:maxLines="1"
@@ -56,10 +82,11 @@
             android:layout_below="@id/etPassword"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/poppins"
             android:text="@string/log_in"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <TextView
@@ -70,7 +97,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:text="@string/forgot_password"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="15sp" />
 
         <TextView
@@ -81,7 +108,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             android:text="@string/sign_up"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="15sp" />
     </RelativeLayout>
 
@@ -90,7 +117,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

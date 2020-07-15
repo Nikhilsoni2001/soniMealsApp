@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="8"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/txtSNo"
@@ -19,7 +20,7 @@
             android:fontFamily="@font/roboto"
             android:gravity="center"
             android:padding="8dp"
-            android:text="1." />
+            android:text="@string/dummy" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins"
                 android:padding="2dp"
-                android:text="Rs.200"
+                android:text="@string/demo"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -73,7 +74,7 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
             android:layout_weight="2.2"
-            android:background="#FFC400"
+            android:background="@color/removeFav"
             android:fontFamily="@font/poppins"
             android:text="Remove"
             android:textAllCaps="false"

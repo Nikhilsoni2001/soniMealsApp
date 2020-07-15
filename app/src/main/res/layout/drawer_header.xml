@@ -13,7 +13,7 @@
         android:layout_marginTop="12dp"
         android:contentDescription="@string/todo"
         android:padding="10dp"
-        android:src="@drawable/profile" />
+        android:src="@drawable/def" />
 
     <TextView
         android:id="@+id/tvName"
@@ -25,7 +25,7 @@
         android:padding="5dp"
         android:text="Nikhil"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <TextView

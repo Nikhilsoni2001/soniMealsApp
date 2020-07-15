@@ -21,7 +21,7 @@
     <string name="password">Password</string>
     <string name="log_in">Login</string>
     <string name="forgot_password">forgot password?</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="sign_up">Register</string>
     <string name="enter_your_registered_mobile_number_and_email_below">Enter your registered mobile and email below</string>
     <string name="next">Next</string>
     <string name="name_min_3_charracters">Name (Min 3 Charracters)</string>
@@ -82,6 +82,10 @@
     <string name="place_order">Place Order</string>
     <string name="order_placed">Your Order has been placed successfully!!</string>
     <string name="sort">Sort</string>
+    <string name="enter_your_credentials_below">Enter your credentials below :</string>
+    <string name="submit">Submit</string>
+    <string name="dummy">1.</string>
+    <string name="demo">Rs.200</string>
 
     <array name="filters">
         <item>Cost(Low to High)</item>

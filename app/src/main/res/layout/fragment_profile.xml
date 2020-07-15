@@ -3,20 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@android:color/white"
     tools:context=".fragment.ProfileFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
         <ImageView
             android:id="@+id/imgDefaultProfile"
             android:layout_width="130dp"
             android:layout_height="130dp"
+            android:layout_below="@+id/toolbar"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp"
-            android:src="@drawable/profile" />
+            android:layout_marginTop="32dp"
+            android:src="@drawable/def" />
 
         <TextView
             android:id="@+id/tvName"
@@ -24,11 +29,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/imgDefaultProfile"
             android:layout_marginHorizontal="25dp"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/white"
+            android:layout_marginTop="24dp"
+            android:background="@color/tv_back"
+            android:fontFamily="@font/poppins"
             android:gravity="center_horizontal"
             android:padding="10dp"
-            android:text="@string/name" />
+            android:text="@string/name"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvMobile"
@@ -37,10 +44,12 @@
             android:layout_below="@id/tvName"
             android:layout_marginHorizontal="25dp"
             android:layout_marginTop="16dp"
-            android:background="@android:color/white"
+            android:background="@color/tv_back"
+            android:fontFamily="@font/poppins"
             android:gravity="center_horizontal"
             android:padding="10dp"
-            android:text="@string/mobile" />
+            android:text="@string/mobile"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvEmail"
@@ -49,10 +58,12 @@
             android:layout_below="@id/tvMobile"
             android:layout_marginHorizontal="25dp"
             android:layout_marginTop="16dp"
-            android:background="@android:color/white"
+            android:background="@color/tv_back"
+            android:fontFamily="@font/poppins"
             android:gravity="center_horizontal"
             android:padding="10dp"
-            android:text="@string/email" />
+            android:text="@string/email"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvAddress"
@@ -61,10 +72,12 @@
             android:layout_below="@id/tvEmail"
             android:layout_marginHorizontal="25dp"
             android:layout_marginTop="16dp"
-            android:background="@android:color/white"
+            android:background="@color/tv_back"
+            android:fontFamily="@font/poppins"
             android:gravity="center_horizontal"
             android:padding="10dp"
-            android:text="@string/delivery_address" />
+            android:text="@string/delivery_address"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 </FrameLayout>

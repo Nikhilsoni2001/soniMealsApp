@@ -4,43 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@android:color/white"
     tools:context=".activity.ForgotActivity">
 
     <RelativeLayout
         android:id="@+id/rlContentMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:background="@android:color/white">
 
-        <ImageView
-            android:id="@+id/imgMainLogo"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+        <TextView
+            android:id="@+id/tvMainLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
-            android:src="@mipmap/ic_logo" />
+            android:layout_marginTop="52dp"
+            android:fontFamily="@font/poppins"
+            android:text="Soni Meals"
+            android:textColor="@android:color/black"
+            android:textSize="45sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/tvMainLogo"
+            android:background="@android:color/black"
+            android:layout_marginHorizontal="75dp"/>
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/imgMainLogo"-->
+        <!--            android:layout_width="150dp"-->
+        <!--            android:layout_height="150dp"-->
+        <!--            android:layout_centerHorizontal="true"-->
+        <!--            android:layout_marginTop="60dp"-->
+        <!--            android:src="@mipmap/ic_logo" />-->
 
         <TextView
             android:id="@+id/txtText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/imgMainLogo"
+            android:layout_below="@id/view1"
+            android:fontFamily="@font/poppins"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="45dp"
             android:text="@string/enter_your_registered_mobile_number_and_email_below"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="17sp" />
 
 
         <EditText
             android:id="@+id/etMobileForget"
             android:layout_width="match_parent"
+            android:fontFamily="@font/roboto"
             android:layout_height="wrap_content"
             android:layout_below="@id/txtText"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@android:color/white"
+            android:layout_marginTop="40dp"
+            android:background="@color/tv_back"
             android:hint="@string/mobile_number_10_digits"
             android:inputType="phone"
             android:maxLength="10"
@@ -51,10 +73,11 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
             android:layout_below="@id/etMobileForget"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="15dp"
-            android:background="@android:color/white"
+            android:background="@color/tv_back"
             android:hint="@string/email_adress"
             android:inputType="textEmailAddress"
             android:maxLength="35"
@@ -67,11 +90,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/etEmail"
             android:layout_marginHorizontal="10dp"
+            android:fontFamily="@font/poppins"
             android:layout_marginTop="20dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorPrimary"
             android:text="@string/next"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
 
@@ -82,5 +106,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="visible" />
+        android:visibility="gone" />
 </RelativeLayout>
