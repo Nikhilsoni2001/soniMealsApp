@@ -6,11 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.appcompat.widget.Toolbar
-import com.android.volley.Request
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.nikhil.sonimeals.util.ConnectionManager
 import com.nikhil.sonimeals.util.REGISTER
 import com.nikhil.sonimeals.R
@@ -22,16 +23,21 @@ import java.util.HashMap
 
 class RegisterActivity : AppCompatActivity() {
 
-    lateinit var toolbar: Toolbar
     private lateinit var btnRegister: Button
-    private lateinit var etName: EditText
-    private lateinit var etMobile: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var etEmail: EditText
-    private lateinit var etDelivery: EditText
-    private lateinit var etCnfrmPass: EditText
+    private lateinit var etName: TextInputEditText
+    private lateinit var elName: TextInputLayout
+    private lateinit var etMobile: TextInputEditText
+    private lateinit var elMobile: TextInputLayout
+    private lateinit var etPassword: TextInputEditText
+    private lateinit var elPassword: TextInputLayout
+    private lateinit var etEmail: TextInputEditText
+    private lateinit var elEmail: TextInputLayout
+    private lateinit var etDelivery: TextInputEditText
+    private lateinit var elDelivery: TextInputLayout
+    private lateinit var etCnfrmPass: TextInputEditText
+    private lateinit var elCnfrmPass: TextInputLayout
     lateinit var progress: ProgressBar
-    lateinit var rlRegister: RelativeLayout
+    lateinit var clRegister: ConstraintLayout
     lateinit var sharedPreferences: SharedPreferences
     lateinit var sessionManager: SessionManager
 
@@ -40,12 +46,9 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
 //        Toolbar
-        toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
         supportActionBar?.title = "Register Yourself"
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setTitleTextAppearance(this, R.style.PoppinsTextAppearance)
 
 //        Session Manager
         sessionManager = SessionManager(this@RegisterActivity)
@@ -56,37 +59,43 @@ class RegisterActivity : AppCompatActivity() {
 
 //        Initializations
         etName = findViewById(R.id.etName)
+        elName = findViewById(R.id.elName)
         etMobile = findViewById(R.id.etMobile)
+        elMobile = findViewById(R.id.elMobile)
         etEmail = findViewById(R.id.etEmail)
-        etPassword = findViewById(R.id.etPass)
+        elEmail = findViewById(R.id.elEmail)
+        etPassword = findViewById(R.id.etNewPass)
+        elPassword = findViewById(R.id.elNewPass)
         etCnfrmPass = findViewById(R.id.etCnfrmPass)
+        elCnfrmPass = findViewById(R.id.elCnfrmPass)
         etDelivery = findViewById(R.id.etDelivery)
+        elDelivery = findViewById(R.id.elDelivery)
         btnRegister = findViewById(R.id.btnRegister)
-        rlRegister = findViewById(R.id.rlRegister)
+        clRegister = findViewById(R.id.rlRegister)
         progress = findViewById(R.id.progressBar)
         progress.visibility = View.GONE
-        rlRegister.visibility = View.VISIBLE
+        clRegister.visibility = View.VISIBLE
 
         btnRegister.setOnClickListener {
-            rlRegister.visibility = View.INVISIBLE
             progress.visibility = View.VISIBLE
 
             if (Validations.validateNameLength(etName.text.toString())) {
-                etName.error = null
+                elName.error = null
                 if (Validations.validateEmail(etEmail.text.toString())) {
-                    etEmail.error = null
+                    elEmail.error = null
                     if (Validations.validateMobile(etMobile.text.toString())) {
-                        etMobile.error = null
+                        elMobile.error = null
                         if (Validations.validatePasswordLength(etPassword.text.toString())) {
-                            etPassword.error = null
+                            elPassword.error = null
                             if (Validations.matchPassword(
                                     etPassword.text.toString(),
                                     etCnfrmPass.text.toString()
                                 )
                             ) {
-                                etPassword.error = null
-                                etCnfrmPass.error = null
+                                elPassword.error = null
+                                elCnfrmPass.error = null
                                 if (ConnectionManager().isNetworkAvailable(this)) {
+                                    clRegister.visibility = View.INVISIBLE
                                     sendRegisterRequest(
                                         etName.text.toString(),
                                         etMobile.text.toString(),
@@ -97,22 +106,34 @@ class RegisterActivity : AppCompatActivity() {
 
 
                                 } else {
+                                    clRegister.visibility = View.VISIBLE
                                     progress.visibility = View.GONE
-                                    Toast.makeText(
-                                        this,
-                                        "Passwords do not match",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    Toast.makeText(this@RegisterActivity, "Internet Unavailable", Toast.LENGTH_LONG).show()
                                 }
+                            } else {
+                                clRegister.visibility = View.VISIBLE
+                                progress.visibility = View.GONE
+                                elCnfrmPass.error = "Invalid Password"
                             }
                         } else {
+                            clRegister.visibility = View.VISIBLE
                             progress.visibility = View.GONE
-
-                            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT)
-                                .show()
+                            elPassword.error = "Invalid Password"
                         }
+                    } else {
+                        clRegister.visibility = View.VISIBLE
+                        progress.visibility = View.GONE
+                        elMobile.error = "Incorrect Mobile Number"
                     }
+                } else {
+                    clRegister.visibility = View.VISIBLE
+                    progress.visibility = View.GONE
+                    elEmail.error = "Incorrect Email"
                 }
+            } else {
+                clRegister.visibility = View.VISIBLE
+                progress.visibility = View.GONE
+                elName.error = "Invalid Name"
             }
         }
     }
@@ -135,7 +156,7 @@ class RegisterActivity : AppCompatActivity() {
 
         val registerPostRequest = object :
             JsonObjectRequest(
-                Request.Method.POST,
+                Method.POST,
                 REGISTER,
                 params,
                 Response.Listener {
@@ -168,21 +189,21 @@ class RegisterActivity : AppCompatActivity() {
                             startActivity(intent)
                             finish()
                         } else {
-                            rlRegister.visibility = View.VISIBLE
+                            clRegister.visibility = View.VISIBLE
                             progress.visibility = View.GONE
                             val msg = data.getString("errorMessage")
                             Toast.makeText(this, msg, Toast.LENGTH_SHORT)
                                 .show()
                         }
                     } catch (e: JSONException) {
-                        rlRegister.visibility = View.VISIBLE
+                        clRegister.visibility = View.VISIBLE
                         progress.visibility = View.INVISIBLE
                         e.printStackTrace()
                     }
 
                 },
                 Response.ErrorListener {
-                    rlRegister.visibility = View.VISIBLE
+                    clRegister.visibility = View.VISIBLE
                     progress.visibility = View.GONE
                     Toast.makeText(
                         this,

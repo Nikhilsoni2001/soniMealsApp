@@ -7,11 +7,14 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import com.android.volley.Request
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.android.volley.Response
 import com.android.volley.VolleyLog
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.nikhil.sonimeals.util.ConnectionManager
 import com.nikhil.sonimeals.util.FORGOT_PASSWORD
 import com.nikhil.sonimeals.R
@@ -19,13 +22,16 @@ import com.nikhil.sonimeals.util.Validations
 import org.json.JSONException
 import org.json.JSONObject
 
+@Suppress("NAME_SHADOWING")
 class ForgotActivity : AppCompatActivity() {
 
-    private lateinit var etForgotMobile: EditText
-    private lateinit var etForgotEmail: EditText
-    private lateinit var btnForgotNext: Button
+    private lateinit var etForgotMobile: TextInputEditText
+    private lateinit var elForgotMobile: TextInputLayout
+    private lateinit var etForgotEmail: TextInputEditText
+    private lateinit var elForgetEmail: TextInputLayout
+    private lateinit var btnForgotNext: MaterialButton
     private lateinit var progress: ProgressBar
-    private lateinit var rlContentMain: RelativeLayout
+    private lateinit var clContentMain: ConstraintLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +40,11 @@ class ForgotActivity : AppCompatActivity() {
         etForgotMobile = findViewById(R.id.etMobileForget)
         etForgotEmail = findViewById(R.id.etEmail)
         btnForgotNext = findViewById(R.id.btnNext)
-        rlContentMain = findViewById(R.id.rlContentMain)
+        clContentMain = findViewById(R.id.rlContentMain)
+        elForgotMobile = findViewById(R.id.elMobileForget)
+        elForgetEmail = findViewById(R.id.elForgetEmail)
         progress = findViewById(R.id.progressBar)
-        rlContentMain.visibility = View.VISIBLE
+        clContentMain.visibility = View.VISIBLE
         progress.visibility = View.INVISIBLE
 
 
@@ -44,14 +52,15 @@ class ForgotActivity : AppCompatActivity() {
 
             val forgotMobileNumber = etForgotMobile.text.toString()
             if (Validations.validateMobile(forgotMobileNumber)) {
-                etForgotMobile.error = null
+                elForgotMobile.error = null
                 if (Validations.validateEmail(etForgotEmail.text.toString())) {
+                    elForgetEmail.error = null
                     if (ConnectionManager().isNetworkAvailable(this@ForgotActivity)) {
-                        rlContentMain.visibility = View.GONE
+                        clContentMain.visibility = View.GONE
                         progress.visibility = View.VISIBLE
                         sendOtp(etForgotMobile.text.toString(), etForgotEmail.text.toString())
                     } else {
-                        rlContentMain.visibility = View.VISIBLE
+                        clContentMain.visibility = View.VISIBLE
                         progress.visibility = View.GONE
                         Toast.makeText(
                             this@ForgotActivity,
@@ -60,14 +69,14 @@ class ForgotActivity : AppCompatActivity() {
                         ).show()
                     }
                 } else {
-                    rlContentMain.visibility = View.VISIBLE
+                    clContentMain.visibility = View.VISIBLE
                     progress.visibility = View.GONE
-                    etForgotEmail.error = "Invalid Email"
+                    elForgetEmail.error = "Invalid Email"
                 }
             } else {
-                rlContentMain.visibility = View.VISIBLE
+                clContentMain.visibility = View.VISIBLE
                 progress.visibility = View.GONE
-                etForgotMobile.error = "Invalid Mobile Number"
+                elForgotMobile.error = "Invalid Mobile Number"
             }
         }
     }
@@ -79,8 +88,8 @@ class ForgotActivity : AppCompatActivity() {
         val params = JSONObject()
         params.put("mobile_number", mobileNumber)
         params.put("email", email)
-        val OTPRequest = object : JsonObjectRequest(
-            Request.Method.POST,
+        val otpRequest = object : JsonObjectRequest(
+            Method.POST,
             FORGOT_PASSWORD,
             params,
             Response.Listener {
@@ -89,37 +98,22 @@ class ForgotActivity : AppCompatActivity() {
                     if (data.getBoolean("success")) {
                         val firstTry = data.getBoolean("first_try")
                         val intent = Intent(this@ForgotActivity, Otp::class.java)
-                        intent.putExtra("user_mobile", mobileNumber)
-                        startActivity(intent)
-
                         if (firstTry) {
                             val builder = AlertDialog.Builder(this@ForgotActivity)
                             builder.setTitle("Information")
                             builder.setMessage("Please check your registered Email for the OTP.")
                             builder.setCancelable(false)
                             builder.setPositiveButton("Ok") { _, _ ->
-                                val intent = Intent(
-                                    this@ForgotActivity,
-                                    Otp::class.java
-                                )
                                 intent.putExtra("user_mobile", mobileNumber)
                                 startActivity(intent)
                             }
                             builder.create().show()
                         } else {
-
-//                            val intent = Intent(this, Otp::class.java)
-////                            intent.putExtra("user_mobile", mobileNumber)
-//                            startActivity(intent)
                             val builder = AlertDialog.Builder(this@ForgotActivity)
                             builder.setTitle("Information")
                             builder.setMessage("Please refer to the previous email for the OTP.")
 
                             builder.setPositiveButton("Ok") { _, _ ->
-                                val intent = Intent(
-                                    this@ForgotActivity,
-                                    Otp::class.java
-                                )
                                 intent.putExtra("user_mobile", mobileNumber)
                                 startActivity(intent)
                             }
@@ -130,7 +124,7 @@ class ForgotActivity : AppCompatActivity() {
                             builder.create().show()
                         }
                     } else {
-                        rlContentMain.visibility = View.VISIBLE
+                        clContentMain.visibility = View.VISIBLE
                         progress.visibility = View.GONE
                         Toast.makeText(
                             this@ForgotActivity,
@@ -141,7 +135,7 @@ class ForgotActivity : AppCompatActivity() {
                 } catch (e: JSONException) {
                     Log.d("Error ->", "$e")
                     e.printStackTrace()
-                    rlContentMain.visibility = View.VISIBLE
+                    clContentMain.visibility = View.VISIBLE
                     progress.visibility = View.GONE
                     Toast.makeText(
                         this@ForgotActivity,
@@ -151,7 +145,7 @@ class ForgotActivity : AppCompatActivity() {
                 }
             },
             Response.ErrorListener {
-                rlContentMain.visibility = View.VISIBLE
+                clContentMain.visibility = View.VISIBLE
                 progress.visibility = View.GONE
                 VolleyLog.e("Error::::", "/post request fail! Error: ${it.message}")
                 Toast.makeText(this@ForgotActivity, it.message, Toast.LENGTH_SHORT).show()
@@ -163,7 +157,7 @@ class ForgotActivity : AppCompatActivity() {
                 return headers
             }
         }
-        queue.add(OTPRequest)
+        queue.add(otpRequest)
     }
 }
 
