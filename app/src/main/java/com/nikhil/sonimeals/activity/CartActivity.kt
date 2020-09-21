@@ -22,6 +22,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
 import com.nikhil.sonimeals.util.PLACE_ORDER
 import com.nikhil.sonimeals.R
@@ -171,7 +172,7 @@ class CartActivity : AppCompatActivity() {
                         dialog.setContentView(R.layout.order_placed_dialog)
                         dialog.show()
                         dialog.setCancelable(false)
-                        val btnOk = dialog.findViewById<Button>(R.id.btnOk)
+                        val btnOk = dialog.findViewById<MaterialButton>(R.id.btnOk)
                         btnOk.setOnClickListener {
                             dialog.dismiss()
                             startActivity(Intent(this@CartActivity, HomeActivity::class.java))

@@ -88,6 +88,8 @@
     <string name="login">Login</string>
     <string name="soni_meals">Soni Meals</string>
     <string name="desc">satisfy your cravings</string>
+    <string name="remove">Remove</string>
+    <string name="ok">Ok</string>
 
     <array name="filters">
         <item>Cost(Low to High)</item>
