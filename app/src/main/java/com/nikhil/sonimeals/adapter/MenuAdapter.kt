@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.nikhil.sonimeals.R
 import com.nikhil.sonimeals.model.FoodItem
 
@@ -25,8 +26,8 @@ class MenuAdapter(
         val foodItemName: TextView = view.findViewById(R.id.txtItemName)
         val foodItemCost: TextView = view.findViewById(R.id.txtCartPrice)
         val sno: TextView = view.findViewById(R.id.txtSNo)
-        val addToCart: Button = view.findViewById(R.id.btnAddToCart)
-        val removeFromCart: Button = view.findViewById(R.id.btnRemoveFromCart)
+        val addToCart: MaterialButton = view.findViewById(R.id.btnAddToCart)
+        val removeFromCart: MaterialButton = view.findViewById(R.id.btnRemoveFromCart)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuAdapter.ViewHolder {

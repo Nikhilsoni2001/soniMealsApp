@@ -6,10 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.textfield.TextInputLayout
 import com.nikhil.sonimeals.util.ConnectionManager
 import com.nikhil.sonimeals.util.LOGIN
 import com.nikhil.sonimeals.R
@@ -23,8 +23,10 @@ import java.util.HashMap
 class LoginActivity : AppCompatActivity() {
 
     //    Declaring All the views present in activity_login.xml
-    lateinit var etMobile: EditText
+    private lateinit var etMobile: EditText
+    private lateinit var elMobile: TextInputLayout
     private lateinit var etPassword: EditText
+    private lateinit var elPassword: TextInputLayout
     private lateinit var btnLogin: Button
     private lateinit var txtForgot: TextView
     private lateinit var txtRegister: TextView
@@ -42,7 +44,9 @@ class LoginActivity : AppCompatActivity() {
 
 //        Initializations
         etMobile = findViewById(R.id.etMobile)
+        elMobile = findViewById(R.id.elMobile)
         etPassword = findViewById(R.id.etPassword)
+        elPassword = findViewById(R.id.elPassword)
         btnLogin = findViewById(R.id.btnLogin)
         txtForgot = findViewById(R.id.txtForgot)
         txtRegister = findViewById(R.id.txtSignup)
@@ -74,88 +78,101 @@ class LoginActivity : AppCompatActivity() {
             val password = etPassword.text.toString()
 
             /*First validate the mobile number and password length*/
-            if (Validations.validateMobile(mobile) && Validations.validatePasswordLength(password)) {
-                if (ConnectionManager().isNetworkAvailable(this@LoginActivity)) {
+            if (Validations.validateMobile(mobile)) {
+                elMobile.error = null
+                if (Validations.validatePasswordLength(password)) {
+                    elPassword.error = null
+                    if (ConnectionManager().isNetworkAvailable(this@LoginActivity)) {
 
-                    /*Create the queue for the request*/
-                    val queue = Volley.newRequestQueue(this)
+                        /*Create the queue for the request*/
+                        val queue = Volley.newRequestQueue(this)
 
 //                    Params
-                    val params = JSONObject()
-                    params.put("mobile_number", mobile)
-                    params.put("password", password)
+                        val params = JSONObject()
+                        params.put("mobile_number", mobile)
+                        params.put("password", password)
 
-                    /*Finally send the json object request*/
-                    val loginRequest = object :
-                        JsonObjectRequest(Request.Method.POST, LOGIN, params, Response.Listener {
+                        /*Finally send the json object request*/
+                        val loginRequest = object :
+                            JsonObjectRequest(Method.POST, LOGIN, params, Response.Listener {
 
-                            try {
-                                val data = it.getJSONObject("data")
-                                if (data.getBoolean("success")) {
-                                    val response = data.getJSONObject("data")
+                                try {
+                                    val data = it.getJSONObject("data")
+                                    if (data.getBoolean("success")) {
+                                        val response = data.getJSONObject("data")
 
-                                    sharedPreferences.edit()
-                                        .putInt("user_id", response.getString("user_id").toInt())
-                                        .apply()
-                                    sharedPreferences.edit()
-                                        .putString("user_name", response.getString("name")).apply()
-                                    sharedPreferences.edit()
-                                        .putString(
-                                            "user_mobile_number",
-                                            response.getString("mobile_number")
-                                        )
-                                        .apply()
-                                    sharedPreferences.edit()
-                                        .putString("user_address", response.getString("address"))
-                                        .apply()
-                                    sharedPreferences.edit()
-                                        .putString("user_email", response.getString("email"))
-                                        .apply()
-                                    sessionManager.setLogin(true)
+                                        sharedPreferences.edit()
+                                            .putInt(
+                                                "user_id",
+                                                response.getString("user_id").toInt()
+                                            )
+                                            .apply()
+                                        sharedPreferences.edit()
+                                            .putString("user_name", response.getString("name"))
+                                            .apply()
+                                        sharedPreferences.edit()
+                                            .putString(
+                                                "user_mobile_number",
+                                                response.getString("mobile_number")
+                                            )
+                                            .apply()
+                                        sharedPreferences.edit()
+                                            .putString(
+                                                "user_address",
+                                                response.getString("address")
+                                            )
+                                            .apply()
+                                        sharedPreferences.edit()
+                                            .putString("user_email", response.getString("email"))
+                                            .apply()
+                                        sessionManager.setLogin(true)
 
-                                    val intent =
-                                        Intent(this@LoginActivity, HomeActivity::class.java)
-                                    progress.visibility = View.GONE
-                                    startActivity(intent)
-                                    finish()
-                                } else {
-                                    progress.visibility = View.GONE
-                                    val msg = data.getString("errorMessage")
-                                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+                                        val intent =
+                                            Intent(this@LoginActivity, HomeActivity::class.java)
+                                        progress.visibility = View.GONE
+                                        startActivity(intent)
+                                        finish()
+                                    } else {
+                                        progress.visibility = View.GONE
+                                        val msg = data.getString("errorMessage")
+                                        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+                                    }
+                                } catch (e: JSONException) {
+                                    e.printStackTrace()
+                                    Toast.makeText(
+                                        this@LoginActivity,
+                                        "Some unexpected Error occurred",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
-                            } catch (e: JSONException) {
-                                e.printStackTrace()
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "Some unexpected Error occurred",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            }, Response.ErrorListener {
+                                progress.visibility = View.GONE
+                                Toast.makeText(this@LoginActivity, "Error $it", Toast.LENGTH_SHORT)
+                                    .show()
+                            }) {
+                            override fun getHeaders(): MutableMap<String, String> {
+                                val headers = HashMap<String, String>()
+                                headers["Content-type"] = "application/json"
+                                headers["token"] = "9bf534118365f1"
+                                return headers
                             }
-                        }, Response.ErrorListener {
-                            progress.visibility = View.GONE
-                            Toast.makeText(this@LoginActivity, "Error $it", Toast.LENGTH_SHORT)
-                                .show()
-                        }) {
-                        override fun getHeaders(): MutableMap<String, String> {
-                            val headers = HashMap<String, String>()
-                            headers["Content-type"] = "application/json"
-                            headers["token"] = "9bf534118365f1"
-                            return headers
                         }
+                        queue.add(loginRequest)
+                    } else {
+                        progress.visibility = View.GONE
+                        Toast.makeText(
+                            this@LoginActivity,
+                            " No Internet Connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                    queue.add(loginRequest)
                 } else {
                     progress.visibility = View.GONE
-                    Toast.makeText(
-                        this@LoginActivity,
-                        " No Internet Connection",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    elPassword.error = "Incorrect Password"
                 }
             } else {
                 progress.visibility = View.GONE
-                Toast.makeText(this@LoginActivity, "Invalid Phone or Password", Toast.LENGTH_SHORT)
-                    .show()
+                elMobile.error = "Incorrect Mobile Number"
             }
         }
 

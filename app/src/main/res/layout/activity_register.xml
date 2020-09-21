@@ -1,161 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlRegister"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:fillViewport="true"
-    android:orientation="vertical"
-    tools:context=".activity.RegisterActivity">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/register"
+        android:src="@drawable/register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/elName"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/name"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.0"
+        app:startIconDrawable="@drawable/ic_action_profile">
 
-
-        <RelativeLayout
-            android:id="@+id/rlRegister"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white">
+            android:fontFamily="@font/roboto"
+            android:inputType="textPersonName"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:textColor="@android:color/black" />
 
-            <include
-                android:id="@+id/toolbar"
-                layout="@layout/toolbar" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/tvMainLogo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="42dp"
-                android:layout_below="@id/toolbar"
-                android:fontFamily="@font/poppins"
-                android:text="Soni Meals"
-                android:textColor="@android:color/black"
-                android:textSize="45sp"
-                android:textStyle="bold" />
 
-            <View
-                android:id="@+id/view1"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_below="@id/tvMainLogo"
-                android:background="@android:color/black"
-                android:layout_marginHorizontal="75dp"/>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/elEmail"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/email"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/elName"
+        app:layout_constraintVertical_bias="0.0"
+        app:startIconDrawable="@drawable/ic_action_email">
 
-            <EditText
-                android:id="@+id/etName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/view1"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="30dp"
-                android:background="@color/tv_back"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/name_min_3_charracters"
-                android:inputType="text"
-                android:maxLength="20"
-                android:maxLines="1"
-                android:padding="10dp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto"
+            android:inputType="textEmailAddress"
+            android:maxLength="30"
+            android:maxLines="1"
+            android:textColor="@android:color/black" />
 
-            <EditText
-                android:id="@+id/etEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etName"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/tv_back"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/email_adress"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:padding="10dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/etMobile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etEmail"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/tv_back"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/mobile_number_10_digits"
-                android:inputType="phone"
-                android:maxLength="10"
-                android:maxLines="1"
-                android:padding="10dp" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/elMobile"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/mobile_number_10_digits"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/elEmail"
+        app:layout_constraintVertical_bias="0.0"
+        app:startIconDrawable="@drawable/ic_action_mobile">
 
-            <EditText
-                android:id="@+id/etDelivery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etMobile"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/tv_back"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/delivery_adrress"
-                android:inputType="text"
-                android:maxLines="1"
-                android:padding="10dp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMobile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto"
+            android:inputType="phone"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:textColor="@android:color/black" />
 
-            <EditText
-                android:id="@+id/etPass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etDelivery"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/tv_back"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/passwrd"
-                android:inputType="textPassword"
-                android:maxLength="20"
-                android:maxLines="1"
-                android:padding="10dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/etCnfrmPass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etPass"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/tv_back"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/confirm_passwrd"
-                android:inputType="textPassword"
-                android:maxLength="20"
-                android:maxLines="1"
-                android:padding="10dp" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/elDelivery"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/delivery_address"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/elMobile"
+        app:layout_constraintVertical_bias="0.0"
+        app:startIconDrawable="@drawable/ic_action_delivery_address">
 
-            <Button
-                android:id="@+id/btnRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etCnfrmPass"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="40dp"
-                android:background="@color/colorPrimary"
-                android:fontFamily="@font/poppins"
-                android:text="@string/register"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDelivery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto"
+            android:inputType="textPostalAddress"
+            android:maxLength="30"
+            android:maxLines="1"
+            android:textColor="@android:color/black" />
 
-        </RelativeLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"/>
-    </RelativeLayout>
-</ScrollView>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/elNewPass"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/new_password"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:endIconMode="password_toggle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/elDelivery"
+        app:layout_constraintVertical_bias="0.0"
+        app:startIconDrawable="@drawable/ic_action_password">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNewPass"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto"
+            android:inputType="textPassword"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:textColor="@android:color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/elCnfrmPass"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/confirm_password"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:endIconMode="password_toggle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/elNewPass"
+        app:layout_constraintVertical_bias="0.0"
+        app:startIconDrawable="@drawable/ic_action_password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCnfrmPass"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto"
+            android:inputType="textPassword"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:textColor="@android:color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegister"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/register"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/elCnfrmPass"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

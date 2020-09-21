@@ -1,14 +1,21 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="textInputStyle">@style/AppTextField</item>
     </style>
 
     <style name="PoppinsTextAppearance">
         <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+    <!--    for edit text-->
+    <style name="AppTextField" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <item name="boxBackgroundColor">@android:color/white</item>
     </style>
 
 </resources>
